@@ -9,6 +9,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'https://sports-auction.vercel.app',
+  'https://sports-auction-oc52.vercel.app', // Production URL
   'https://sports-auction-*.vercel.app' // Allow Vercel preview deployments
 ];
 
@@ -45,10 +46,17 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('Connected to MongoDB Atlas'))
 .catch((err) => console.error('MongoDB connection error:', err));
 
-// Routes (to be added)
+// Import Routes
+const playerRoutes = require('./routes/player.routes');
+const teamRoutes = require('./routes/team.routes');
+
+// Routes
 app.get('/', (req, res) => {
   res.json({ message: 'Sports Auction API is running' });
 });
+
+app.use('/api/players', playerRoutes);
+app.use('/api/teams', teamRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
