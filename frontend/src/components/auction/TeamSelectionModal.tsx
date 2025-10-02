@@ -34,7 +34,7 @@ const TeamSelectionModal: React.FC<TeamSelectionModalProps> = ({
     team.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const canAfford = (team: Team) => team.remainingBudget >= soldAmount;
+  const canAfford = (team: Team) => (team.remainingBudget || 0) >= soldAmount;
   const hasSlots = (team: Team) => team.filledSlots < team.totalSlots;
   const isEligible = (team: Team) => canAfford(team) && hasSlots(team);
 
@@ -60,7 +60,7 @@ const TeamSelectionModal: React.FC<TeamSelectionModalProps> = ({
   const getTotalBudget = (team: Team) => team.totalBudget || team.budget || 0;
   const getBudgetPercentage = (team: Team) => {
     const total = getTotalBudget(team);
-    return total > 0 ? (team.remainingBudget / total) * 100 : 0;
+    return total > 0 ? ((team.remainingBudget || 0) / total) * 100 : 0;
   };
   const getSlotsPercentage = (team: Team) => (team.filledSlots / team.totalSlots) * 100;
 
@@ -192,7 +192,7 @@ const TeamSelectionModal: React.FC<TeamSelectionModalProps> = ({
                               <span className="text-sm">💰</span> Budget
                             </span>
                             <span className={`text-xs font-bold ${affordable ? 'text-green-400' : 'text-red-400'}`}>
-                              ₹{team.remainingBudget.toLocaleString()}
+                              ₹{(team.remainingBudget || 0).toLocaleString()}
                             </span>
                           </div>
                           <div className="h-1.5 bg-gray-700/50 rounded-full overflow-hidden">
@@ -240,7 +240,7 @@ const TeamSelectionModal: React.FC<TeamSelectionModalProps> = ({
                           <div className="flex items-center justify-between text-xs">
                             <span className="text-gray-500">After:</span>
                             <span className="text-yellow-400 font-bold">
-                              ₹{(team.remainingBudget - soldAmount).toLocaleString()}
+                              ₹{((team.remainingBudget || 0) - soldAmount).toLocaleString()}
                             </span>
                           </div>
                         </div>
