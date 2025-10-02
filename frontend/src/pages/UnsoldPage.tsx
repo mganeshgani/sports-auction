@@ -147,7 +147,7 @@ const UnsoldPage: React.FC = () => {
 
                 {/* Player Photo */}
                 <div className="flex justify-center mb-3">
-                  {player.photoUrl ? (
+                  {player.photoUrl && player.photoUrl.trim() !== '' ? (
                     <img 
                       src={player.photoUrl} 
                       alt={player.name}
@@ -155,8 +155,9 @@ const UnsoldPage: React.FC = () => {
                       referrerPolicy="no-referrer"
                       className="w-20 h-20 rounded-full object-cover border-4 border-gray-700 group-hover:border-red-500 transition-all duration-300 group-hover:scale-110"
                       onError={(e) => {
-                        console.error('Image load error for', player.name, ':', player.photoUrl);
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/80?text=' + player.name.charAt(0);
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        target.parentElement!.innerHTML = `<div class="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-3xl font-black text-white border-4 border-gray-700 group-hover:border-red-500 transition-all duration-300 group-hover:scale-110">${player.name.charAt(0)}</div>`;
                       }}
                     />
                   ) : (
@@ -223,11 +224,16 @@ const UnsoldPage: React.FC = () => {
               {/* Player Info */}
               <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
                 <div className="flex items-center gap-4">
-                  {selectedPlayer.photoUrl ? (
+                  {selectedPlayer.photoUrl && selectedPlayer.photoUrl.trim() !== '' ? (
                     <img 
                       src={selectedPlayer.photoUrl} 
                       alt={selectedPlayer.name}
                       className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        target.parentElement!.innerHTML = `<div class="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center text-2xl font-black text-white">${selectedPlayer.name.charAt(0)}</div>`;
+                      }}
                     />
                   ) : (
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center text-2xl font-black text-white">

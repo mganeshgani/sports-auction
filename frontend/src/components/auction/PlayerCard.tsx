@@ -127,7 +127,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                 {/* Inner highlight */}
                 <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent rounded-full"></div>
                 
-                {player.photoUrl ? (
+                {player.photoUrl && player.photoUrl.trim() !== '' ? (
                   <img 
                     src={player.photoUrl} 
                     alt={player.name}
@@ -135,7 +135,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                     referrerPolicy="no-referrer"
                     className="relative w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"
                     onError={(e) => {
-                      console.error('Image load error for', player.name, ':', player.photoUrl);
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
                       target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br ${positionColors.gradient} flex items-center justify-center text-6xl font-black text-white shadow-inner">${player.name.charAt(0).toUpperCase()}</div>`;

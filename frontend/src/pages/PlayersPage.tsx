@@ -163,7 +163,7 @@ const PlayersPage: React.FC = () => {
 
                   {/* Player Photo */}
                   <div className="flex justify-center mb-3">
-                    {player.photoUrl ? (
+                    {player.photoUrl && player.photoUrl.trim() !== '' ? (
                       <img 
                         src={player.photoUrl} 
                         alt={player.name}
@@ -171,8 +171,9 @@ const PlayersPage: React.FC = () => {
                         referrerPolicy="no-referrer"
                         className="w-20 h-20 rounded-full object-cover border-4 border-gray-700 group-hover:border-indigo-500 transition-all duration-300 group-hover:scale-110"
                         onError={(e) => {
-                          console.error('Image load error for', player.name, ':', player.photoUrl);
-                          (e.target as HTMLImageElement).src = 'https://via.placeholder.com/80?text=' + player.name.charAt(0);
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.parentElement!.innerHTML = `<div class="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-3xl font-black text-white border-4 border-gray-700 group-hover:border-indigo-500 transition-all duration-300 group-hover:scale-110">${player.name.charAt(0)}</div>`;
                         }}
                       />
                     ) : (

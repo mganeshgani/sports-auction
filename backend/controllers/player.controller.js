@@ -33,15 +33,14 @@ exports.uploadPlayers = async (req, res) => {
           status: 'available'
         };
         
-        // If photoUrl starts with /, prepend base URL or use placeholder
+        // If photoUrl starts with /, it's a local path - leave it empty so frontend shows initials
         if (player.photoUrl && player.photoUrl.startsWith('/')) {
-          // You can change this base URL to your actual photo server URL
-          player.photoUrl = `https://via.placeholder.com/150?text=${encodeURIComponent(player.name)}`;
+          player.photoUrl = ''; // Frontend will show initials fallback
         }
         
-        // Add default photoUrl if missing
+        // Leave photoUrl empty if missing - frontend will show initials
         if (!player.photoUrl || player.photoUrl === '') {
-          player.photoUrl = 'https://via.placeholder.com/150?text=Player';
+          player.photoUrl = ''; // Empty string triggers initials fallback
         }
         
         results.push(player);
