@@ -36,8 +36,11 @@ const io = new Server(server, {
       }
     },
     credentials: true,
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+  },
+  pingTimeout: 60000,
+  pingInterval: 25000,
+  transports: ['websocket', 'polling']
 });
 
 // Socket.io connection handling
