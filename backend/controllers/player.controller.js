@@ -8,6 +8,7 @@ exports.uploadPlayers = async (req, res) => {
   try {
     console.log('Upload request received');
     console.log('File:', req.file);
+    console.log('Headers:', req.headers);
     
     if (!req.file) {
       console.error('No file in request');
@@ -18,9 +19,20 @@ exports.uploadPlayers = async (req, res) => {
     const results = [];
     
     fs.createReadStream(req.file.path)
-      .pipe(parse({ columns: true, trim: true }))
+      .pipe(parse({ columns: true, trim: true, skip_empty_lines: true }))
       .on('data', (data) => {
         console.log('CSV row:', data);
+        
+        // Add default photoUrl if missing
+        if (!data.photoUrl || data.photoUrl === '') {
+          data.photoUrl = 'https://via.placeholder.com/150?text=Player';
+        }
+        
+        // Ensure status is set
+        if (!data.status) {
+          data.status = 'available';
+        }
+        
         results.push(data);
       })
       .on('end', async () => {
@@ -29,10 +41,31 @@ exports.uploadPlayers = async (req, res) => {
           
           if (results.length === 0) {
             fs.unlinkSync(req.file.path);
-            return res.status(400).json({ error: 'CSV file is empty' });
+            return res.status(400).json({ error: 'CSV file is empty or has no valid data' });
           }
           
-          const players = await Player.insertMany(results);
+          // Validate required fields
+          const requiredFields = ['name', 'regNo', 'class', 'position'];
+          const missingFields = [];
+          
+          results.forEach((row, index) => {
+            requiredFields.forEach(field => {
+              if (!row[field] || row[field].trim() === '') {
+                missingFields.push(`Row ${index + 1}: missing '${field}'`);
+              }
+            });
+          });
+          
+          if (missingFields.length > 0) {
+            fs.unlinkSync(req.file.path);
+            return res.status(400).json({ 
+              error: 'CSV validation failed',
+              details: 'Missing required fields: ' + missingFields.join(', ')
+            });
+          }
+          
+          console.log('Attempting to insert players:', results.length);
+          const players = await Player.insertMany(results, { ordered: false });
           console.log('Players inserted:', players.length);
           
           // Delete the temporary file
@@ -48,6 +81,15 @@ exports.uploadPlayers = async (req, res) => {
           if (req.file && fs.existsSync(req.file.path)) {
             fs.unlinkSync(req.file.path);
           }
+          
+          // Handle duplicate key error
+          if (error.code === 11000) {
+            return res.status(400).json({ 
+              error: 'Duplicate player registration number found',
+              details: 'One or more players with the same regNo already exist in the database'
+            });
+          }
+          
           res.status(400).json({ 
             error: 'Invalid CSV format or data',
             details: error.message 
