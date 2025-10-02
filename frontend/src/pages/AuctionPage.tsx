@@ -136,7 +136,8 @@ const AuctionPage: React.FC = () => {
       });
 
       await axios.patch(`${API_URL}/teams/${teamId}`, {
-        $push: { players: currentPlayer._id }
+        $push: { players: currentPlayer._id },
+        soldAmount: soldAmount
       });
 
       // Play sold sound and confetti
@@ -166,13 +167,11 @@ const AuctionPage: React.FC = () => {
         status: 'unsold'
       });
 
-      alert('Player marked as unsold');
       setShowPlayer(false);
       setCurrentPlayer(null);
       fetchAvailableCount();
     } catch (error) {
       console.error('Error marking player unsold:', error);
-      alert('Failed to mark player as unsold');
     }
   };
 

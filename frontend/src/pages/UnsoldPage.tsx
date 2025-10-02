@@ -51,7 +51,6 @@ const UnsoldPage: React.FC = () => {
 
   const handleAuctionConfirm = async () => {
     if (!selectedPlayer || !selectedTeam || !soldAmount) {
-      alert('Please enter amount and select a team');
       return;
     }
 
@@ -63,9 +62,10 @@ const UnsoldPage: React.FC = () => {
         soldAmount: soldAmount
       });
 
-      // Add player to team
+      // Add player to team and deduct amount
       await axios.patch(`${API_URL}/teams/${selectedTeam}`, {
-        $push: { players: selectedPlayer._id }
+        $push: { players: selectedPlayer._id },
+        soldAmount: soldAmount
       });
 
       // Play confetti
@@ -74,8 +74,6 @@ const UnsoldPage: React.FC = () => {
         spread: 70,
         origin: { y: 0.6 }
       });
-
-      alert(`${selectedPlayer.name} sold successfully!`);
       
       // Reset and refresh
       setShowModal(false);
@@ -86,7 +84,6 @@ const UnsoldPage: React.FC = () => {
       fetchTeams();
     } catch (error) {
       console.error('Error auctioning player:', error);
-      alert('Failed to auction player. Please try again.');
     }
   };
 

@@ -38,6 +38,12 @@ exports.updateTeam = async (req, res) => {
     if (updateData.$push && updateData.$push.players) {
       team.players.push(updateData.$push.players);
       team.filledSlots = team.players.length;
+      
+      // Deduct soldAmount from remainingBudget if provided
+      if (updateData.soldAmount && typeof updateData.soldAmount === 'number') {
+        team.remainingBudget = (team.remainingBudget || team.budget) - updateData.soldAmount;
+      }
+      
       await team.save();
       return res.json(team);
     }
