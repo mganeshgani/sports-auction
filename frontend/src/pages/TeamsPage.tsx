@@ -279,7 +279,7 @@ const TeamsPage: React.FC = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-500">Remaining</span>
-                        <span className="text-sm font-bold text-yellow-400">₹{team.remainingBudget.toLocaleString()}</span>
+                        <span className="text-sm font-bold text-yellow-400">₹{(team.remainingBudget || 0).toLocaleString()}</span>
                       </div>
                     </div>
 
@@ -309,7 +309,7 @@ const TeamsPage: React.FC = () => {
                     <div className="grid grid-cols-2 gap-2">
                       <div className="bg-gradient-to-br from-indigo-600/10 to-purple-600/10 rounded-lg p-3 border border-indigo-600/20">
                         <p className="text-xs text-gray-400 mb-1">Spent</p>
-                        <p className="text-lg font-black text-white">₹{((team.budget || 0) - team.remainingBudget).toLocaleString()}</p>
+                        <p className="text-lg font-black text-white">₹{((team.budget || 0) - (team.remainingBudget || 0)).toLocaleString()}</p>
                       </div>
                       <div className="bg-gradient-to-br from-green-600/10 to-emerald-600/10 rounded-lg p-3 border border-green-600/20">
                         <p className="text-xs text-gray-400 mb-1">Slots Left</p>
