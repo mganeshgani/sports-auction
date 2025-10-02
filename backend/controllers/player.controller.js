@@ -141,3 +141,26 @@ exports.deleteAllPlayers = async (req, res) => {
     res.status(500).json({ error: 'Error deleting all players' });
   }
 };
+
+// Update player (PATCH)
+exports.updatePlayer = async (req, res) => {
+  try {
+    const { playerId } = req.params;
+    const updateData = req.body;
+
+    const player = await Player.findById(playerId);
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    // Update player fields
+    Object.keys(updateData).forEach(key => {
+      player[key] = updateData[key];
+    });
+
+    await player.save();
+    res.json(player);
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating player' });
+  }
+};

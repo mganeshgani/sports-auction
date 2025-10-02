@@ -27,25 +27,36 @@ exports.createTeam = async (req, res) => {
 exports.updateTeam = async (req, res) => {
   try {
     const { teamId } = req.params;
-    const { name, totalSlots, budget } = req.body;
+    const updateData = req.body;
 
     const team = await Team.findById(teamId);
     if (!team) {
       return res.status(404).json({ error: 'Team not found' });
     }
 
+    // Handle MongoDB $push operation for adding players
+    if (updateData.$push && updateData.$push.players) {
+      team.players.push(updateData.$push.players);
+      team.filledSlots = team.players.length;
+      await team.save();
+      return res.json(team);
+    }
+
+    // Regular update fields
+    const { name, totalSlots, budget } = updateData;
+
     // Validate total slots
-    if (totalSlots < team.filledSlots) {
+    if (totalSlots && totalSlots < team.filledSlots) {
       return res.status(400).json({ 
         error: 'New total slots cannot be less than current filled slots' 
       });
     }
 
     // Update fields
-    team.name = name || team.name;
-    team.totalSlots = totalSlots || team.totalSlots;
+    if (name) team.name = name;
+    if (totalSlots) team.totalSlots = totalSlots;
     if (budget !== undefined) {
-      const spentBudget = team.budget ? (team.budget - team.remainingBudget) : 0;
+      const spentBudget = team.budget ? (team.budget - (team.remainingBudget || 0)) : 0;
       team.budget = budget;
       team.remainingBudget = budget - spentBudget;
     }

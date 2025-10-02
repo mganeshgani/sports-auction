@@ -8,6 +8,9 @@ router.post('/', teamController.createTeam);
 // Update team
 router.put('/:teamId', teamController.updateTeam);
 
+// Update team (PATCH - same as PUT)
+router.patch('/:teamId', teamController.updateTeam);
+
 // Delete team
 router.delete('/:teamId', teamController.deleteTeam);
 
