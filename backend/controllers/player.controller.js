@@ -158,6 +158,12 @@ exports.updatePlayer = async (req, res) => {
       player[key] = updateData[key];
     });
 
+    // If marking as unsold, clear team and soldAmount
+    if (updateData.status === 'unsold') {
+      player.team = null;
+      player.soldAmount = null;
+    }
+
     await player.save();
     res.json(player);
   } catch (error) {
