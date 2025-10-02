@@ -2,7 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const http = require('http');
+const { Server } = require('socket.io');
+
 const app = express();
+const server = http.createServer(app);
 
 // CORS Configuration - Allow production frontend
 const allowedOrigins = [
@@ -12,6 +16,48 @@ const allowedOrigins = [
   'https://sports-auction-oc52.vercel.app', // Production URL
   'https://sports-auction-*.vercel.app' // Allow Vercel preview deployments
 ];
+
+// Socket.io configuration
+const io = new Server(server, {
+  cors: {
+    origin: function(origin, callback) {
+      if (!origin) return callback(null, true);
+      const isAllowed = allowedOrigins.some(allowedOrigin => {
+        if (allowedOrigin.includes('*')) {
+          const pattern = new RegExp(allowedOrigin.replace('*', '.*'));
+          return pattern.test(origin);
+        }
+        return allowedOrigin === origin;
+      });
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST"]
+  }
+});
+
+// Socket.io connection handling
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+
+  socket.on('placeBid', (data) => {
+    console.log('Bid placed:', data);
+    io.emit('bidPlaced', data);
+  });
+
+  socket.on('startAuction', (data) => {
+    console.log('Auction started:', data);
+    io.emit('auctionStarted', data);
+  });
+});
 
 app.use(cors({
   origin: function(origin, callback) {
@@ -65,6 +111,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log('Socket.io is ready');
 });
