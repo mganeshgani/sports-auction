@@ -23,17 +23,28 @@ exports.uploadPlayers = async (req, res) => {
       .on('data', (data) => {
         console.log('CSV row:', data);
         
+        // Map CSV columns to database fields
+        const player = {
+          name: data['Player Name'] || data.name || '',
+          regNo: data['Registration Number'] || data.regNo || '',
+          class: data['Class'] || data.class || '',
+          position: data['Position'] || data.position || '',
+          photoUrl: data['Photo'] || data.photoUrl || '',
+          status: 'available'
+        };
+        
+        // If photoUrl starts with /, prepend base URL or use placeholder
+        if (player.photoUrl && player.photoUrl.startsWith('/')) {
+          // You can change this base URL to your actual photo server URL
+          player.photoUrl = `https://via.placeholder.com/150?text=${encodeURIComponent(player.name)}`;
+        }
+        
         // Add default photoUrl if missing
-        if (!data.photoUrl || data.photoUrl === '') {
-          data.photoUrl = 'https://via.placeholder.com/150?text=Player';
+        if (!player.photoUrl || player.photoUrl === '') {
+          player.photoUrl = 'https://via.placeholder.com/150?text=Player';
         }
         
-        // Ensure status is set
-        if (!data.status) {
-          data.status = 'available';
-        }
-        
-        results.push(data);
+        results.push(player);
       })
       .on('end', async () => {
         try {
@@ -50,8 +61,8 @@ exports.uploadPlayers = async (req, res) => {
           
           results.forEach((row, index) => {
             requiredFields.forEach(field => {
-              if (!row[field] || row[field].trim() === '') {
-                missingFields.push(`Row ${index + 1}: missing '${field}'`);
+              if (!row[field] || (typeof row[field] === 'string' && row[field].trim() === '')) {
+                missingFields.push(`Row ${index + 2}: missing '${field}'`); // +2 because row 1 is header, index starts at 0
               }
             });
           });
@@ -60,7 +71,7 @@ exports.uploadPlayers = async (req, res) => {
             fs.unlinkSync(req.file.path);
             return res.status(400).json({ 
               error: 'CSV validation failed',
-              details: 'Missing required fields: ' + missingFields.join(', ')
+              details: 'Missing required fields. ' + missingFields.slice(0, 5).join(', ') + (missingFields.length > 5 ? `... and ${missingFields.length - 5} more` : '')
             });
           }
           
