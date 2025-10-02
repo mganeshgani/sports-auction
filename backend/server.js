@@ -4,8 +4,37 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS Configuration - Allow production frontend
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://sports-auction.vercel.app',
+  'https://sports-auction-*.vercel.app' // Allow Vercel preview deployments
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin matches any allowed pattern
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.includes('*')) {
+        const pattern = new RegExp(allowedOrigin.replace('*', '.*'));
+        return pattern.test(origin);
+      }
+      return allowedOrigin === origin;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 
 // MongoDB Connection
