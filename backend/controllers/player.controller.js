@@ -33,14 +33,10 @@ exports.uploadPlayers = async (req, res) => {
           status: 'available'
         };
         
-        // If photoUrl starts with /, it's a local path - leave it empty so frontend shows initials
-        if (player.photoUrl && player.photoUrl.startsWith('/')) {
-          player.photoUrl = ''; // Frontend will show initials fallback
-        }
-        
-        // Leave photoUrl empty if missing - frontend will show initials
-        if (!player.photoUrl || player.photoUrl === '') {
-          player.photoUrl = ''; // Empty string triggers initials fallback
+        // Keep the photoUrl as-is (will be served from /public folder in React)
+        // If empty, leave empty for initials fallback
+        if (!player.photoUrl) {
+          player.photoUrl = '';
         }
         
         results.push(player);
