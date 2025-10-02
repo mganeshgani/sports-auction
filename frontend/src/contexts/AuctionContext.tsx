@@ -32,7 +32,9 @@ export const AuctionProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [bidTimeLeft, setBidTimeLeft] = useState(10);
 
   useEffect(() => {
-    const socketInstance = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001');
+    // Use REACT_APP_API_URL and remove /api for socket connection
+    const socketUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5001';
+    const socketInstance = io(socketUrl);
 
     socketInstance.on('connect', () => {
       setIsConnected(true);
