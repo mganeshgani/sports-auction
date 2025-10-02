@@ -24,4 +24,7 @@ router.get('/unsold', playerController.getUnsoldPlayers);
 // Get all players
 router.get('/', playerController.getAllPlayers);
 
+// Delete all players (for auction reset)
+router.delete('/', playerController.deleteAllPlayers);
+
 module.exports = router;

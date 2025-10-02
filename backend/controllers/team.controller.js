@@ -137,3 +137,16 @@ exports.getFinalResults = async (req, res) => {
     res.status(500).json({ error: 'Error fetching final results' });
   }
 };
+
+// Delete all teams (for auction reset)
+exports.deleteAllTeams = async (req, res) => {
+  try {
+    const result = await Team.deleteMany({});
+    res.json({ 
+      message: 'All teams deleted successfully', 
+      deletedCount: result.deletedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting all teams' });
+  }
+};

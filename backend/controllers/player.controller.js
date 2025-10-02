@@ -128,3 +128,16 @@ exports.getAllPlayers = async (req, res) => {
     res.status(500).json({ error: 'Error fetching players' });
   }
 };
+
+// Delete all players (for auction reset)
+exports.deleteAllPlayers = async (req, res) => {
+  try {
+    const result = await Player.deleteMany({});
+    res.json({ 
+      message: 'All players deleted successfully', 
+      deletedCount: result.deletedCount 
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting all players' });
+  }
+};
