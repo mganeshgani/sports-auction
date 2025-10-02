@@ -6,26 +6,71 @@ const fs = require('fs');
 // Upload players from CSV
 exports.uploadPlayers = async (req, res) => {
   try {
+    console.log('Upload request received');
+    console.log('File:', req.file);
+    
     if (!req.file) {
+      console.error('No file in request');
       return res.status(400).json({ error: 'No CSV file uploaded' });
     }
 
+    console.log('Processing CSV file:', req.file.originalname);
     const results = [];
+    
     fs.createReadStream(req.file.path)
       .pipe(parse({ columns: true, trim: true }))
-      .on('data', (data) => results.push(data))
+      .on('data', (data) => {
+        console.log('CSV row:', data);
+        results.push(data);
+      })
       .on('end', async () => {
         try {
+          console.log('CSV parsing complete. Total rows:', results.length);
+          
+          if (results.length === 0) {
+            fs.unlinkSync(req.file.path);
+            return res.status(400).json({ error: 'CSV file is empty' });
+          }
+          
           const players = await Player.insertMany(results);
+          console.log('Players inserted:', players.length);
+          
           // Delete the temporary file
           fs.unlinkSync(req.file.path);
-          res.json({ message: 'Players uploaded successfully', count: players.length });
+          
+          res.json({ 
+            message: 'Players uploaded successfully', 
+            count: players.length 
+          });
         } catch (error) {
-          res.status(400).json({ error: 'Invalid CSV format or data' });
+          console.error('Error inserting players:', error);
+          // Clean up file even on error
+          if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+          }
+          res.status(400).json({ 
+            error: 'Invalid CSV format or data',
+            details: error.message 
+          });
         }
+      })
+      .on('error', (error) => {
+        console.error('CSV parsing error:', error);
+        // Clean up file on error
+        if (req.file && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+        res.status(400).json({ 
+          error: 'Error parsing CSV file',
+          details: error.message 
+        });
       });
   } catch (error) {
-    res.status(500).json({ error: 'Error uploading players' });
+    console.error('Upload error:', error);
+    res.status(500).json({ 
+      error: 'Error uploading players',
+      details: error.message 
+    });
   }
 };
 

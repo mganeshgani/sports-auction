@@ -42,9 +42,12 @@ const CSVUpload: React.FC<{ onUploadSuccess: () => void }> = ({ onUploadSuccess 
       if (fileInput) fileInput.value = '';
       onUploadSuccess();
     } catch (error: any) {
+      console.error('Upload error:', error);
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message || 'Failed to upload file';
+      const errorDetails = error.response?.data?.details ? ` - ${error.response.data.details}` : '';
       setMessage({ 
         type: 'error', 
-        text: error.response?.data?.message || 'Failed to upload file' 
+        text: errorMsg + errorDetails
       });
     } finally {
       setUploading(false);
