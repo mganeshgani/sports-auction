@@ -32,46 +32,87 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ onSpinComplete, isSpinning }) => 
             transition: isSpinning ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none'
           }}
         >
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="wheel-segment"
-              style={{
-                transform: `rotate(${i * 30}deg)`,
-                background: i % 2 === 0 ? 
-                  'linear-gradient(to right, #4f46e5, #7c3aed)' : 
-                  'linear-gradient(to right, #7c3aed, #ec4899)'
-              }}
-            >
-              <div className="wheel-segment-image">
-                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                </svg>
+          {[...Array(12)].map((_, i) => {
+            const isGoldSegment = i % 2 === 0;
+            
+            return (
+              <div
+                key={i}
+                className="wheel-segment"
+                style={{
+                  transform: `rotate(${i * 30}deg)`,
+                  background: isGoldSegment ? 
+                    'linear-gradient(135deg, #B8941E 0%, #D4AF37 30%, #F0D770 50%, #D4AF37 70%, #A67C00 100%)' : 
+                    'linear-gradient(135deg, #0D1117 0%, #1A1F2E 30%, #242B3D 50%, #1A1F2E 70%, #0D1117 100%)'
+                }}
+              >
+                {/* Elegant shine overlay */}
+                <div className="segment-shine" style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: isGoldSegment ? 
+                    'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 35%, transparent 65%, rgba(0,0,0,0.2) 100%)' :
+                    'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, transparent 40%)',
+                  pointerEvents: 'none'
+                }}></div>
+                
+                {/* Subtle texture overlay */}
+                <div className="segment-texture" style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: isGoldSegment ?
+                    'radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%)' :
+                    'radial-gradient(circle at 25% 25%, rgba(212, 175, 55, 0.08) 0%, transparent 50%)',
+                  pointerEvents: 'none'
+                }}></div>
               </div>
-            </div>
-          ))}
+            );
+          })}
+          
+          {/* Outer decorative ring */}
+          <div className="wheel-outer-ring"></div>
           
           {/* Center circle */}
           <div className="wheel-center">
+            <div className="wheel-center-ring"></div>
             <div className="wheel-center-inner">
-              <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 10a2 2 0 114 0 2 2 0 01-4 0z" />
-              </svg>
+              <div className="center-dot"></div>
             </div>
           </div>
         </div>
 
-        {/* Pointer */}
+        {/* Premium Pointer */}
         <div className="wheel-pointer">
-          <div className="pointer-triangle"></div>
+          <div className="pointer-glow"></div>
+          <div className="pointer-arrow"></div>
         </div>
       </div>
 
       {isSpinning && (
         <div className="spin-text">
-          <p className="text-2xl font-bold text-white animate-pulse">
-            Selecting Player...
-          </p>
+          <div className="spin-text-container">
+            <div className="spin-icon">
+              <svg style={{ width: '2rem', height: '2rem', animation: 'spin 1s linear infinite' }} fill="#D4AF37" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <p style={{ 
+              color: '#D4AF37', 
+              fontSize: '1.5rem',
+              fontWeight: '600',
+              letterSpacing: '0.05em',
+              textShadow: '0 0 20px rgba(212, 175, 55, 0.4), 0 2px 10px rgba(0,0,0,0.5)',
+              marginTop: '0.5rem'
+            }}>
+              Selecting Player...
+            </p>
+          </div>
         </div>
       )}
     </div>
