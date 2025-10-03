@@ -16,50 +16,117 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, compact = false }) => {
     : 0;
 
   const getBudgetColor = () => {
-    if (budgetPercentage > 50) return 'from-green-500 to-emerald-500';
-    if (budgetPercentage > 25) return 'from-yellow-500 to-orange-500';
-    return 'from-red-500 to-rose-500';
+    if (budgetPercentage > 50) return { from: '#B08B4F', to: '#C99D5F', tw: 'from-yellow-400 to-amber-500' };
+    if (budgetPercentage > 25) return { from: '#B08B4F', to: '#A07A3F', tw: 'from-yellow-400 to-amber-500' };
+    return { from: '#7D4B57', to: '#8D5B67', tw: 'from-amber-500 to-yellow-600' };
   };
 
   const getSlotsColor = () => {
-    if (slotsPercentage < 50) return 'from-blue-500 to-cyan-500';
-    if (slotsPercentage < 80) return 'from-purple-500 to-pink-500';
-    return 'from-green-500 to-emerald-500';
+    if (slotsPercentage < 50) return { from: '#7D4B57', to: '#8D5B67', tw: 'from-blue-900 to-purple-900' };
+    if (slotsPercentage < 80) return { from: '#7D4B57', to: '#A07A3F', tw: 'from-purple-900 to-purple-600' };
+    return { from: '#B08B4F', to: '#C99D5F', tw: 'from-yellow-400 to-amber-500' };
   };
+
+  const budgetColors = getBudgetColor();
+  const slotsColors = getSlotsColor();
 
   if (compact) {
     return (
       <div className="group relative">
-        {/* Glow Effect */}
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
+        {/* Gold Glow Effect */}
+        <div style={{
+          position: 'absolute',
+          inset: '-2px',
+          background: 'linear-gradient(135deg, rgba(176, 139, 79, 0.3), rgba(176, 139, 79, 0.2))',
+          borderRadius: '12px',
+          filter: 'blur(8px)',
+          opacity: 0.2,
+          transition: 'opacity 300ms'
+        }} className="group-hover:opacity-40"></div>
         
-        {/* Card */}
-        <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-2.5 border border-gray-700/50 hover:border-gray-600 transition-all duration-300">
-          {/* Team Name with Icon */}
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-black text-sm shadow-lg">
+        {/* Premium Black Card */}
+        <div style={{
+          position: 'relative',
+          background: 'linear-gradient(135deg, rgba(26, 26, 31, 0.95), rgba(26, 26, 31, 0.85))',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '10px',
+          padding: '8px',
+          border: '1px solid rgba(176, 139, 79, 0.25)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(176, 139, 79, 0.1)',
+          transition: 'all 300ms'
+        }} className="hover:border-[rgba(176,139,79,0.4)]">
+          {/* Team Name with Gold Icon */}
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '7px',
+              background: 'linear-gradient(135deg, #B08B4F, #C99D5F)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 800,
+              fontSize: '0.75rem',
+              color: '#0E0E12',
+              boxShadow: '0 0 20px rgba(176, 139, 79, 0.4)'
+            }}>
               {team.name.charAt(0).toUpperCase()}
             </div>
-            <h3 className="font-black text-white text-sm flex-1 truncate">{team.name}</h3>
+            <h3 style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 700,
+              fontSize: '0.8125rem',
+              color: '#F5F5F5',
+              flex: 1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              letterSpacing: '0.05em',
+              textShadow: '0 2px 8px rgba(176, 139, 79, 0.2)'
+            }}>{team.name}</h3>
           </div>
 
           {/* Stats */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {/* Budget */}
             <div>
               <div className="flex justify-between items-center mb-0.5">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
-                  <span>💰</span>
+                <span style={{
+                  fontSize: '10px',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 600,
+                  color: '#A0A0A5',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em'
+                }}>
                   Budget
                 </span>
-                <span className="text-[10px] font-bold text-white">
+                <span style={{
+                  fontSize: '10px',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 700,
+                  color: '#B08B4F'
+                }}>
                   ₹{team.remainingBudget?.toLocaleString()}
                 </span>
               </div>
-              <div className="h-1.5 bg-gray-700/50 rounded-full overflow-hidden backdrop-blur-sm">
+              <div style={{
+                height: '5px',
+                background: 'rgba(26, 26, 31, 0.6)',
+                borderRadius: '9999px',
+                overflow: 'hidden',
+                border: '1px solid rgba(176, 139, 79, 0.25)'
+              }}>
                 <div 
-                  className={`h-full bg-gradient-to-r ${getBudgetColor()} rounded-full transition-all duration-500`}
-                  style={{ width: `${budgetPercentage}%` }}
+                  style={{
+                    height: '100%',
+                    background: `linear-gradient(90deg, ${budgetColors.from}, ${budgetColors.to})`,
+                    borderRadius: '9999px',
+                    transition: 'width 500ms',
+                    width: `${budgetPercentage}%`,
+                    boxShadow: '0 0 10px rgba(176, 139, 79, 0.4)'
+                  }}
                 ></div>
               </div>
             </div>
@@ -67,25 +134,57 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, compact = false }) => {
             {/* Slots */}
             <div>
               <div className="flex justify-between items-center mb-0.5">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
-                  <span>👥</span>
+                <span style={{
+                  fontSize: '10px',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 600,
+                  color: '#A0A0A5',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em'
+                }}>
                   Players
                 </span>
-                <span className="text-[10px] font-bold text-white">
+                <span style={{
+                  fontSize: '10px',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 700,
+                  color: '#B08B4F'
+                }}>
                   {team.filledSlots}/{team.totalSlots}
                 </span>
               </div>
-              <div className="h-1.5 bg-gray-700/50 rounded-full overflow-hidden backdrop-blur-sm">
+              <div style={{
+                height: '5px',
+                background: 'rgba(26, 26, 31, 0.6)',
+                borderRadius: '9999px',
+                overflow: 'hidden',
+                border: '1px solid rgba(176, 139, 79, 0.25)'
+              }}>
                 <div 
-                  className={`h-full bg-gradient-to-r ${getSlotsColor()} rounded-full transition-all duration-500`}
-                  style={{ width: `${slotsPercentage}%` }}
+                  style={{
+                    height: '100%',
+                    background: `linear-gradient(90deg, ${slotsColors.from}, ${slotsColors.to})`,
+                    borderRadius: '9999px',
+                    transition: 'width 500ms',
+                    width: `${slotsPercentage}%`,
+                    boxShadow: slotsPercentage > 0 ? '0 0 10px rgba(176, 139, 79, 0.3)' : 'none'
+                  }}
                 ></div>
               </div>
             </div>
           </div>
 
-          {/* Bottom Accent */}
-          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-b-lg"></div>
+          {/* Gold Bottom Accent */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '2px',
+            background: 'linear-gradient(90deg, rgba(176, 139, 79, 0.3), #B08B4F, rgba(176, 139, 79, 0.3))',
+            borderBottomLeftRadius: '12px',
+            borderBottomRightRadius: '12px'
+          }}></div>
         </div>
       </div>
     );
@@ -93,90 +192,226 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, compact = false }) => {
 
   return (
     <div className="group relative">
-      {/* Large Glow Effect */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition duration-500 animate-pulse"></div>
+      {/* Premium Gold Glow Effect */}
+      <div style={{
+        position: 'absolute',
+        inset: '-4px',
+        background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(255, 215, 0, 0.3), rgba(212, 175, 55, 0.4))',
+        borderRadius: '20px',
+        filter: 'blur(16px)',
+        opacity: 0.3,
+        transition: 'opacity 500ms'
+      }} className="group-hover:opacity-50 animate-pulse"></div>
       
-      {/* Main Card */}
-      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-700/50">
-        {/* Top Accent */}
-        <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></div>
+      {/* Premium Black Glass Card */}
+      <div style={{
+        position: 'relative',
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(26, 26, 26, 0.9), rgba(0, 0, 0, 0.95))',
+        backdropFilter: 'blur(25px)',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.15)',
+        border: '1px solid rgba(212, 175, 55, 0.25)'
+      }}>
+        {/* Top Gold Accent */}
+        <div style={{
+          height: '3px',
+          background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.3), #FFD700, #D4AF37, #FFD700, rgba(212, 175, 55, 0.3))',
+          boxShadow: '0 0 10px rgba(255, 215, 0, 0.3)'
+        }}></div>
         
         <div className="p-6">
           {/* Team Header */}
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-black text-2xl shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+            <div style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #FFD700, #D4AF37, #FFD700)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 900,
+              fontSize: '1.5rem',
+              color: '#000000',
+              boxShadow: '0 0 30px rgba(212, 175, 55, 0.5), inset 0 2px 10px rgba(255, 255, 255, 0.2)',
+              transform: 'scale(1)',
+              transition: 'transform 300ms'
+            }} className="group-hover:scale-110">
               {team.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
-              <h3 className="font-black text-white text-2xl mb-1">{team.name}</h3>
-              <p className="text-gray-400 text-sm font-semibold">Team Overview</p>
+              <h3 style={{
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 700,
+                fontSize: '1.5rem',
+                color: '#FFFFFF',
+                marginBottom: '4px',
+                textShadow: '0 2px 12px rgba(212, 175, 55, 0.3)',
+                letterSpacing: '0.02em'
+              }}>{team.name}</h3>
+              <p style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                color: '#9ca3af'
+              }}>Team Overview</p>
             </div>
           </div>
 
           {/* Stats Grid */}
           <div className="space-y-4">
             {/* Total Budget */}
-            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/30">
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.6), rgba(0, 0, 0, 0.4))',
+              borderRadius: '12px',
+              padding: '16px',
+              border: '1px solid rgba(212, 175, 55, 0.2)'
+            }}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                  <span className="text-xl">💼</span>
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  color: '#9ca3af',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em'
+                }}>
                   Total Budget
                 </span>
-                <span className="text-xl font-black text-white">
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '1.25rem',
+                  fontWeight: 800,
+                  color: '#FFFFFF'
+                }}>
                   ₹{team.budget?.toLocaleString()}
                 </span>
               </div>
             </div>
 
             {/* Remaining Budget */}
-            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/30">
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.6), rgba(0, 0, 0, 0.4))',
+              borderRadius: '12px',
+              padding: '16px',
+              border: '1px solid rgba(212, 175, 55, 0.2)'
+            }}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                  <span className="text-xl">💰</span>
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  color: '#9ca3af',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em'
+                }}>
                   Remaining
                 </span>
-                <span className="text-xl font-black text-yellow-400">
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '1.25rem',
+                  fontWeight: 800,
+                  color: '#FFD700',
+                  textShadow: '0 0 10px rgba(255, 215, 0, 0.3)'
+                }}>
                   ₹{team.remainingBudget?.toLocaleString()}
                 </span>
               </div>
-              <div className="h-3 bg-gray-700/50 rounded-full overflow-hidden mt-2">
+              <div style={{
+                height: '12px',
+                background: 'rgba(0, 0, 0, 0.5)',
+                borderRadius: '9999px',
+                overflow: 'hidden',
+                marginTop: '8px',
+                border: '1px solid rgba(212, 175, 55, 0.2)'
+              }}>
                 <div 
-                  className={`h-full bg-gradient-to-r ${getBudgetColor()} rounded-full transition-all duration-500 shadow-lg`}
-                  style={{ width: `${budgetPercentage}%` }}
+                  className={`h-full bg-gradient-to-r ${budgetColors.tw} rounded-full transition-all duration-500`}
+                  style={{ 
+                    width: `${budgetPercentage}%`,
+                    boxShadow: '0 0 15px rgba(212, 175, 55, 0.4)'
+                  }}
                 ></div>
               </div>
               <div className="flex justify-between mt-1">
-                <span className="text-xs text-gray-500 font-semibold">{budgetPercentage.toFixed(0)}% left</span>
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  color: '#9ca3af'
+                }}>{budgetPercentage.toFixed(0)}% left</span>
               </div>
             </div>
 
             {/* Players */}
-            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700/30">
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.6), rgba(0, 0, 0, 0.4))',
+              borderRadius: '12px',
+              padding: '16px',
+              border: '1px solid rgba(212, 175, 55, 0.2)'
+            }}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                  <span className="text-xl">👥</span>
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  color: '#9ca3af',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em'
+                }}>
                   Squad
                 </span>
-                <span className="text-xl font-black text-white">
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '1.25rem',
+                  fontWeight: 800,
+                  color: '#FFFFFF'
+                }}>
                   {team.filledSlots} / {team.totalSlots}
                 </span>
               </div>
-              <div className="h-3 bg-gray-700/50 rounded-full overflow-hidden mt-2">
+              <div style={{
+                height: '12px',
+                background: 'rgba(0, 0, 0, 0.5)',
+                borderRadius: '9999px',
+                overflow: 'hidden',
+                marginTop: '8px',
+                border: '1px solid rgba(212, 175, 55, 0.2)'
+              }}>
                 <div 
-                  className={`h-full bg-gradient-to-r ${getSlotsColor()} rounded-full transition-all duration-500 shadow-lg`}
-                  style={{ width: `${slotsPercentage}%` }}
+                  className={`h-full bg-gradient-to-r ${slotsColors.tw} rounded-full transition-all duration-500`}
+                  style={{ 
+                    width: `${slotsPercentage}%`,
+                    boxShadow: slotsPercentage > 0 ? '0 0 15px rgba(212, 175, 55, 0.3)' : 'none'
+                  }}
                 ></div>
               </div>
               <div className="flex justify-between mt-1">
-                <span className="text-xs text-gray-500 font-semibold">{slotsPercentage.toFixed(0)}% filled</span>
-                <span className="text-xs text-gray-500 font-semibold">{team.totalSlots - (team.filledSlots || 0)} slots left</span>
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  color: '#9ca3af'
+                }}>{slotsPercentage.toFixed(0)}% filled</span>
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  color: '#9ca3af'
+                }}>{team.totalSlots - (team.filledSlots || 0)} slots left</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Accent */}
-        <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></div>
+        {/* Bottom Gold Accent */}
+        <div style={{
+          height: '3px',
+          background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.3), #FFD700, #D4AF37, #FFD700, rgba(212, 175, 55, 0.3))',
+          boxShadow: '0 0 10px rgba(255, 215, 0, 0.3)'
+        }}></div>
       </div>
     </div>
   );

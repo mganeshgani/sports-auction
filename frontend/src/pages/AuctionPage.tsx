@@ -19,6 +19,7 @@ const AuctionPage: React.FC = () => {
   const [showCelebration, setShowCelebration] = useState(false);
   const [celebrationAmount, setCelebrationAmount] = useState<number>(0);
   const [celebrationTeamName, setCelebrationTeamName] = useState<string>('');
+  const [hasAuctionStarted, setHasAuctionStarted] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
   const SOCKET_URL = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5001';
@@ -85,6 +86,9 @@ const AuctionPage: React.FC = () => {
   };
 
   const handleNextPlayer = async () => {
+    if (!hasAuctionStarted) {
+      setHasAuctionStarted(true);
+    }
     setIsSpinning(true);
     setShowPlayer(false);
     setCurrentPlayer(null);
@@ -191,16 +195,15 @@ const AuctionPage: React.FC = () => {
       {/* Compact Header */}
       <div className="flex justify-between items-center mb-3 flex-shrink-0">
         <h1 className="text-2xl font-bold">Live Auction</h1>
-        <div className="text-sm bg-gray-800 px-4 py-2 rounded-lg">
-          <span className="text-gray-400">Available: </span>
-          <span className="font-bold text-green-400">{availableCount}</span>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 flex-1 overflow-hidden min-h-0">
         {/* Team Dashboard - Compact Sidebar */}
-        <div className="lg:col-span-1 space-y-2 overflow-y-auto custom-scrollbar pr-2 min-h-0">
-          <h2 className="text-xl font-black text-white mb-2 flex items-center gap-2 sticky top-0 bg-gray-900 py-2 z-10">
+        <div className="lg:col-span-1 space-y-1.5 overflow-y-auto custom-scrollbar pr-2 min-h-0">
+          <h2 className="text-xl font-black mb-1.5 flex items-center gap-2 sticky top-0 py-1.5 z-10" style={{
+            color: '#F5F5F5',
+            backgroundColor: '#0E0E12'
+          }}>
             <span className="text-2xl">🏆</span>
             Teams
           </h2>
@@ -212,24 +215,102 @@ const AuctionPage: React.FC = () => {
         {/* Auction Area - Larger Space */}
         <div className="lg:col-span-3 flex flex-col h-full">
           {!showPlayer && !isSpinning && (
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg border border-gray-700/50 flex items-center justify-center flex-1 min-h-0">
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30">
-                  <span className="text-4xl">🎯</span>
+            <div className="backdrop-blur-sm rounded-lg flex items-center justify-center flex-1 min-h-0" style={{
+              backgroundColor: 'rgba(26, 26, 31, 0.6)',
+              border: '1px solid #2C2C32'
+            }}>
+              <div className="text-center max-w-md">
+                {/* Premium Gold Icon */}
+                <div className="relative inline-block mb-6">
+                  <div className="absolute inset-0 rounded-full blur-xl opacity-40 animate-pulse" style={{
+                    background: 'linear-gradient(to right, #B08B4F, #C99D5F, #B08B4F)'
+                  }}></div>
+                  <div className="relative w-24 h-24 mx-auto rounded-full flex items-center justify-center shadow-2xl transform hover:scale-105 transition-transform duration-300" style={{
+                    background: 'linear-gradient(135deg, #B08B4F, #C99D5F, #A07A3F)',
+                    border: '2px solid rgba(176, 139, 79, 0.5)'
+                  }}>
+                    <span className="text-5xl">�</span>
+                  </div>
                 </div>
+
+                {/* Elegant Heading */}
+                <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r bg-clip-text text-transparent" style={{
+                  fontFamily: "'Playfair Display', serif",
+                  letterSpacing: '0.02em',
+                  backgroundImage: 'linear-gradient(to right, #F5F5F5, #B08B4F, #F5F5F5)'
+                }}>
+                  {!hasAuctionStarted ? 'Premium Auction Awaits' : 'Ready for Next Bid'}
+                </h2>
+                <p className="mb-8 text-sm" style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  letterSpacing: '0.05em',
+                  color: '#A0A0A5'
+                }}>
+                  {!hasAuctionStarted 
+                    ? 'Commence the bidding experience' 
+                    : 'Continue the auction journey'}
+                </p>
+
+                {/* Premium Button */}
                 <button
                   onClick={handleNextPlayer}
                   disabled={availableCount === 0}
-                  className={`px-6 py-3 text-lg font-bold rounded-lg transition-all ${
-                    availableCount === 0
-                      ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 shadow-lg hover:shadow-xl'
-                  }`}
+                  className="group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    padding: '0',
+                    background: 'none',
+                    border: 'none'
+                  }}
                 >
-                  Next Player
+                  {/* Gold Glow Effect */}
+                  <div className="absolute inset-0 rounded-xl blur-md opacity-40 group-hover:opacity-60 transition-opacity duration-300" style={{
+                    background: 'linear-gradient(to right, #B08B4F, #C99D5F, #B08B4F)'
+                  }}></div>
+                  
+                  {/* Button Content */}
+                  <div className="relative px-10 py-4 rounded-xl shadow-2xl transform group-hover:scale-105 transition-all duration-300 group-hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6),0_0_40px_rgba(176,139,79,0.5)]" style={{
+                    background: 'linear-gradient(to right, #B08B4F, #C99D5F, #A07A3F)',
+                    border: '2px solid rgba(176, 139, 79, 0.5)',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(176, 139, 79, 0.3)'
+                  }}>
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl animate-pulse">✨</span>
+                      <span className="text-lg font-bold" style={{
+                        fontFamily: "'Montserrat', sans-serif",
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        color: '#0E0E12'
+                      }}>
+                        {!hasAuctionStarted 
+                          ? 'Start Bidding' 
+                          : 'Next Player'}
+                      </span>
+                      <span className="text-2xl animate-pulse">✨</span>
+                    </div>
+                    {/* Shine Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                  </div>
                 </button>
-                {availableCount === 0 && (
-                  <p className="mt-4 text-gray-400 text-sm">No available players</p>
+
+                {/* Available Count Badge */}
+                {availableCount > 0 ? (
+                  <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm" style={{
+                    background: 'linear-gradient(to right, rgba(125, 75, 87, 0.2), rgba(125, 75, 87, 0.15))',
+                    border: '1px solid rgba(125, 75, 87, 0.4)'
+                  }}>
+                    <span className="text-sm font-semibold" style={{color: '#B08B4F'}}>{availableCount}</span>
+                    <span className="text-xs" style={{
+                      color: '#A0A0A5',
+                      fontFamily: "'Montserrat', sans-serif",
+                      letterSpacing: '0.05em'
+                    }}>Players Available</span>
+                  </div>
+                ) : (
+                  <p className="mt-6 text-sm font-medium" style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    letterSpacing: '0.05em',
+                    color: '#7D4B57'
+                  }}>No Available Players</p>
                 )}
               </div>
             </div>

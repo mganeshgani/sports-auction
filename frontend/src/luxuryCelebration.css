@@ -917,12 +917,13 @@
   text-align: center;
   animation: contentEmerge 1.4s cubic-bezier(0.16, 1, 0.3, 1);
   max-width: 900px;
-  padding: 60px 40px;
+  padding: 20px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
+  padding-top: 80px;
 }
 
 @keyframes contentEmerge {
@@ -941,7 +942,7 @@
   position: relative;
   width: 200px;
   height: 200px;
-  margin: 0 auto 60px;
+  margin: 0 auto 35px;
   animation: badgeEntrance 1.8s cubic-bezier(0.16, 1, 0.3, 1);
   filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.4));
 }
@@ -1096,7 +1097,7 @@
 
 .sold-typography-luxury {
   position: relative;
-  margin-bottom: 45px;
+  margin-bottom: 30px;
 }
 
 .sold-backdrop-text {
@@ -1198,7 +1199,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin: 50px 0;
+  margin: 30px 0;
   animation: dividerExpand 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s backwards;
 }
 
@@ -1292,7 +1293,7 @@
 .amount-card-luxury {
   position: relative;
   display: inline-block;
-  margin: 45px auto 50px;
+  margin: 25px auto 30px;
   animation: cardSlideUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.9s backwards;
   width: auto;
   max-width: 90%;
@@ -1470,7 +1471,7 @@
   border: 1.5px solid rgba(16, 185, 129, 0.4);
   border-radius: 50px;
   padding: 18px 45px;
-  margin-top: 55px;
+  margin-top: 30px;
   animation: indicatorFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) 1.2s backwards;
 }
 
