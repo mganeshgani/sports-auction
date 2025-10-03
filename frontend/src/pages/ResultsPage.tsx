@@ -227,14 +227,23 @@ const ResultsPage: React.FC = () => {
             {teams.map((team, index) => {
               const teamPlayers = players.filter(p => p.team === team._id);
               const spent = teamPlayers.reduce((sum, p) => sum + (p.soldAmount || 0), 0);
-              const remaining = (team.remainingBudget !== undefined ? team.remainingBudget : (team.budget || 0) - spent);
-              const budgetUsedPercentage = ((spent / (team.budget || 1)) * 100).toFixed(0);
+              
+              // Use backend data when available, fallback to calculated values
+              const actualFilledSlots = team.filledSlots || teamPlayers.length;
+              const actualRemaining = team.remainingBudget !== undefined && team.remainingBudget !== null 
+                ? team.remainingBudget 
+                : (team.budget || 0) - spent;
+              const actualSpent = (team.budget || 0) - actualRemaining;
+              const budgetUsedPercentage = ((actualSpent / (team.budget || 1)) * 100).toFixed(0);
               
               console.log(`Team ${team.name}:`, {
-                playersCount: teamPlayers.length,
-                spent,
-                remaining,
-                budgetUsed: budgetUsedPercentage + '%'
+                filledSlots: actualFilledSlots,
+                playersInState: teamPlayers.length,
+                spent: actualSpent,
+                remaining: actualRemaining,
+                budgetUsed: budgetUsedPercentage + '%',
+                backendFilledSlots: team.filledSlots,
+                backendRemainingBudget: team.remainingBudget
               });
               
               // Premium gradient colors for teams
@@ -259,7 +268,7 @@ const ResultsPage: React.FC = () => {
               
               return (
                 <div
-                  key={`${team._id}-${teamPlayers.length}-${spent}`}
+                  key={`${team._id}-${actualFilledSlots}-${actualSpent}-${actualRemaining}`}
                   className={`group flex-shrink-0 w-80 sm:w-96 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-2xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10`}
                   style={{ maxHeight: 'calc(100vh - 200px)' }}
                 >
@@ -283,7 +292,7 @@ const ResultsPage: React.FC = () => {
                           <h2 className="text-xl font-black text-white truncate">{team.name}</h2>
                           <div className="flex items-center gap-2 text-xs mt-1">
                             <span className="bg-slate-800/60 px-2 py-0.5 rounded text-slate-300">
-                              👥 {teamPlayers.length}/{team.totalSlots}
+                              👥 {actualFilledSlots}/{team.totalSlots}
                             </span>
                             <span className="bg-slate-800/60 px-2 py-0.5 rounded text-slate-300">
                               {budgetUsedPercentage}%
@@ -298,17 +307,17 @@ const ResultsPage: React.FC = () => {
                       <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2">
                         <p className="text-xs text-slate-400">Spent</p>
                         <p className="text-base font-black bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
-                          ₹{(spent / 1000).toFixed(1)}K
+                          ₹{(actualSpent / 1000).toFixed(1)}K
                         </p>
                       </div>
                       <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2">
                         <p className="text-xs text-slate-400">Left</p>
                         <p className={`text-base font-black ${
-                          remaining >= (team.budget || 0) * 0.3 ? 'text-emerald-400' : 
-                          remaining >= (team.budget || 0) * 0.1 ? 'text-amber-400' : 
+                          actualRemaining >= (team.budget || 0) * 0.3 ? 'text-emerald-400' : 
+                          actualRemaining >= (team.budget || 0) * 0.1 ? 'text-amber-400' : 
                           'text-rose-400'
                         }`}>
-                          ₹{(remaining / 1000).toFixed(1)}K
+                          ₹{(actualRemaining / 1000).toFixed(1)}K
                         </p>
                       </div>
                     </div>
