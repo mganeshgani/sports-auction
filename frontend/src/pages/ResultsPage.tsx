@@ -20,10 +20,14 @@ const ResultsPage: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     try {
+      console.log('📊 Fetching latest teams and players data...');
       const [teamsRes, playersRes] = await Promise.all([
         axios.get(`${API_URL}/teams`),
         axios.get(`${API_URL}/players`)
       ]);
+      
+      console.log('✅ Teams fetched:', teamsRes.data.length);
+      console.log('✅ Players fetched:', playersRes.data.length);
       
       setTeams(teamsRes.data);
       setPlayers(playersRes.data);
@@ -38,12 +42,20 @@ const ResultsPage: React.FC = () => {
         unsold: unsold.length,
         totalSpent
       });
+      
+      console.log('📈 Stats updated:', { 
+        total: playersRes.data.length, 
+        sold: sold.length, 
+        unsold: unsold.length 
+      });
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('❌ Error fetching data:', error);
     } finally {
-      setLoading(false);
+      if (loading) {
+        setLoading(false);
+      }
     }
-  }, [API_URL]);
+  }, [API_URL, loading]);
 
   useEffect(() => {
     fetchData();
@@ -218,6 +230,13 @@ const ResultsPage: React.FC = () => {
               const remaining = (team.remainingBudget !== undefined ? team.remainingBudget : (team.budget || 0) - spent);
               const budgetUsedPercentage = ((spent / (team.budget || 1)) * 100).toFixed(0);
               
+              console.log(`Team ${team.name}:`, {
+                playersCount: teamPlayers.length,
+                spent,
+                remaining,
+                budgetUsed: budgetUsedPercentage + '%'
+              });
+              
               // Premium gradient colors for teams
               const teamGradients = [
                 'from-violet-600/20 via-purple-600/20 to-fuchsia-600/20',
@@ -240,7 +259,7 @@ const ResultsPage: React.FC = () => {
               
               return (
                 <div
-                  key={team._id}
+                  key={`${team._id}-${teamPlayers.length}-${spent}`}
                   className={`group flex-shrink-0 w-80 sm:w-96 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-2xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10`}
                   style={{ maxHeight: 'calc(100vh - 200px)' }}
                 >
