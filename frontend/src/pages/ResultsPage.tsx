@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Team, Player } from '../types';
 import { CSVLink } from 'react-csv';
+import io from 'socket.io-client';
 
 const ResultsPage: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -15,12 +16,9 @@ const ResultsPage: React.FC = () => {
   });
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+  const SOCKET_URL = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5001';
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [teamsRes, playersRes] = await Promise.all([
@@ -46,7 +44,51 @@ const ResultsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [API_URL]);
+
+  useEffect(() => {
+    fetchData();
+    
+    // Setup Socket.io connection for real-time updates
+    const socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('✓ Results page connected to Socket.io');
+    });
+
+    socket.on('playerSold', () => {
+      console.log('Player sold - refreshing results');
+      fetchData();
+    });
+
+    socket.on('playerMarkedUnsold', () => {
+      console.log('Player marked unsold - refreshing results');
+      fetchData();
+    });
+
+    socket.on('dataReset', () => {
+      console.log('Data reset - refreshing results');
+      fetchData();
+    });
+
+    socket.on('playerUpdated', () => {
+      console.log('Player updated - refreshing results');
+      fetchData();
+    });
+
+    socket.on('teamUpdated', () => {
+      console.log('Team updated - refreshing results');
+      fetchData();
+    });
+
+    socket.on('disconnect', () => {
+      console.log('✗ Results page disconnected from Socket.io');
+    });
+    
+    return () => {
+      socket.disconnect();
+    };
+  }, [fetchData, SOCKET_URL]);
 
   const csvHeaders = [
     { label: 'Player Name', key: 'name' },
