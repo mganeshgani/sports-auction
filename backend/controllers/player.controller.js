@@ -196,6 +196,13 @@ exports.markUnsold = async (req, res) => {
     player.status = 'unsold';
     await player.save();
 
+    // Emit socket event for real-time updates
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('playerMarkedUnsold', player);
+      io.emit('playerUpdated', player);
+    }
+
     res.json({ message: 'Player marked as unsold', player });
   } catch (error) {
     res.status(500).json({ error: 'Error marking player as unsold' });
@@ -226,6 +233,13 @@ exports.getAllPlayers = async (req, res) => {
 exports.deleteAllPlayers = async (req, res) => {
   try {
     const result = await Player.deleteMany({});
+    
+    // Emit socket event for real-time updates
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('dataReset');
+    }
+    
     res.json({ 
       message: 'All players deleted successfully', 
       deletedCount: result.deletedCount 
@@ -258,6 +272,19 @@ exports.updatePlayer = async (req, res) => {
     }
 
     await player.save();
+    
+    // Emit socket event for real-time updates
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('playerUpdated', player);
+      if (updateData.status === 'unsold') {
+        io.emit('playerMarkedUnsold', player);
+      }
+      if (updateData.status === 'sold') {
+        io.emit('playerSold', player);
+      }
+    }
+    
     res.json(player);
   } catch (error) {
     res.status(500).json({ error: 'Error updating player' });

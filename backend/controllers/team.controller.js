@@ -45,6 +45,13 @@ exports.updateTeam = async (req, res) => {
       }
       
       await team.save();
+      
+      // Emit socket event for real-time updates
+      const io = req.app.get('io');
+      if (io) {
+        io.emit('teamUpdated', team);
+      }
+      
       return res.json(team);
     }
 
@@ -68,6 +75,13 @@ exports.updateTeam = async (req, res) => {
     }
 
     await team.save();
+    
+    // Emit socket event for real-time updates
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('teamUpdated', team);
+    }
+    
     res.json(team);
   } catch (error) {
     if (error.code === 11000) {
@@ -159,6 +173,13 @@ exports.getFinalResults = async (req, res) => {
 exports.deleteAllTeams = async (req, res) => {
   try {
     const result = await Team.deleteMany({});
+    
+    // Emit socket event for real-time updates
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('dataReset');
+    }
+    
     res.json({ 
       message: 'All teams deleted successfully', 
       deletedCount: result.deletedCount 
