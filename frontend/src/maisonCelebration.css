@@ -1,0 +1,953 @@
+/* ✨ MAISON LUXURY - ULTRA PREMIUM CELEBRATION ✨ */
+/* Black & Gold Elegance with Royal Blue & Purple Depth */
+
+/* ═══════════════════════════════════════════════════════════
+   PREMIUM BLACK & GOLD COLOR THEORY
+   ═══════════════════════════════════════════════════════════
+   
+   Luxury Palette:
+   - Pure Black: #000000 (Ultimate sophistication)
+   - Rich Charcoal: #1a1a1a (Deep elegance)
+   - Midnight Black: #0a0a0a (Depth)
+   
+   Premium Golds:
+   - Cartier Pure Gold: #D4AF37 (24k brilliance)
+   - Bulgari Yellow Gold: #FFD700 (Italian luxury)
+   - Van Cleef Vibrant: #E5C100 (High jewelry)
+   
+   Royal Accents:
+   - Royal Blue: #1e3a8a (Deep sophistication)
+   - Sapphire Blue: #0f172a (Midnight depth)
+   - Imperial Purple: #581c87 (Regal elegance)
+   - Amethyst: #7c3aed (Jewel tone)
+   
+   Design Philosophy:
+   - 70%: Black (sophisticated base)
+   - 25%: Premium gold (luxury highlight)
+   - 5%: Blue/purple (royal accent)
+   
+   ═══════════════════════════════════════════════════════════ */
+
+/* Main Overlay Container */
+.maison-celebration-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 0;
+  animation: maisonEntrance 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@keyframes maisonEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Sophisticated Black Backdrop with Royal Blue & Purple Depth */
+.maison-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    160deg,
+    #000000 0%,        /* Pure black elegance */
+    #0a0a0a 15%,       /* Midnight black */
+    #1a1a1a 30%,       /* Rich charcoal */
+    #0f172a 45%,       /* Sapphire black */
+    #1e3a8a 60%,       /* Royal blue depth */
+    #581c87 75%,       /* Imperial purple */
+    #3b0764 88%,       /* Deep purple */
+    #1a1a1a 100%       /* Rich charcoal */
+  );
+  background-size: 150% 150%;
+  animation: backdropShift 40s ease-in-out infinite;
+}
+
+@keyframes backdropShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Radial Light - Golden Luminosity with Royal Accents */
+.maison-radial-light {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 950px;
+  height: 950px;
+  background: radial-gradient(
+    ellipse,
+    rgba(212, 175, 55, 0.18) 0%,      /* Cartier pure gold glow */
+    rgba(255, 215, 0, 0.16) 15%,      /* Bulgari yellow gold */
+    rgba(229, 193, 0, 0.14) 30%,      /* Van Cleef vibrant */
+    rgba(30, 58, 138, 0.12) 48%,      /* Royal blue accent */
+    rgba(88, 28, 135, 0.08) 65%,      /* Imperial purple accent */
+    rgba(212, 175, 55, 0.06) 78%,     /* Cartier fade */
+    transparent 92%
+  );
+  animation: radialPulse 9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes radialPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+/* Content Container */
+.maison-content-container {
+  position: relative;
+  z-index: 10001;
+  text-align: center;
+  max-width: 750px;
+  width: 92%;
+  padding: 5px 25px 65px;
+  margin: auto;
+  animation: contentRise 1.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes contentRise {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CROWN EMBLEM - ULTRA PREMIUM
+   ═══════════════════════════════════════════════════════════ */
+
+.maison-crown-emblem {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 12px;
+  animation: crownDescend 1.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes crownDescend {
+  from {
+    opacity: 0;
+    transform: translateY(-60px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.crown-outer-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.35) 0%,       /* Cartier pure gold */
+    rgba(255, 215, 0, 0.25) 25%,       /* Bulgari yellow gold */
+    rgba(30, 58, 138, 0.15) 50%,       /* Royal blue whisper */
+    rgba(88, 28, 135, 0.1) 65%,        /* Purple hint */
+    transparent 80%
+  );
+  animation: crownGlowPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes crownGlowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+.crown-ring-1 {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid rgba(212, 175, 55, 0.5);  /* Cartier pure gold */
+  animation: ringRotate1 20s linear infinite;
+}
+
+@keyframes ringRotate1 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.crown-ring-2 {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 58, 237, 0.35);  /* Amethyst purple accent */
+  animation: ringRotate2 15s linear infinite reverse;
+}
+
+@keyframes ringRotate2 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.crown-center {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    #FFD700 0%,        /* Bulgari yellow gold */
+    #E5C100 20%,       /* Van Cleef vibrant */
+    #D4AF37 40%,       /* Cartier pure gold */
+    #F4C430 60%,       /* Tiffany saffron */
+    #C9A661 80%,       /* Rolex champagne */
+    #D4AF37 100%       /* Cartier pure gold */
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 12px 45px rgba(212, 175, 55, 0.6),
+    0 6px 25px rgba(229, 193, 0, 0.4),
+    0 2px 15px rgba(255, 215, 0, 0.3),
+    inset 0 3px 12px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 12px rgba(0, 0, 0, 0.3);
+  animation: crownFloat 4s ease-in-out infinite;
+}
+
+@keyframes crownFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.crown-icon {
+  width: 45px;
+  height: 45px;
+  color: #FFFFFF;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
+  animation: iconShimmer 3s ease-in-out infinite;
+}
+
+@keyframes iconShimmer {
+  0%, 100% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.4));
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TYPOGRAPHY - CARTIER ELEGANCE
+   ═══════════════════════════════════════════════════════════ */
+
+.maison-heading-section {
+  margin-bottom: 12px;
+  animation: headingFadeIn 1.8s cubic-bezier(0.19, 1, 0.22, 1) 0.2s backwards;
+}
+
+@keyframes headingFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.maison-prestige-label {
+  font-family: 'Montserrat', 'Arial', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  background: linear-gradient(
+    90deg,
+    #D4AF37 0%,        /* Cartier pure gold */
+    #E5C100 50%,       /* Van Cleef vibrant */
+    #D4AF37 100%       /* Cartier pure gold */
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  opacity: 0.98;
+  animation: labelPulse 3s ease-in-out infinite;
+}
+
+@keyframes labelPulse {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.maison-sold-text {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 65px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  background: linear-gradient(
+    180deg,
+    #FFFFFF 0%,
+    #F5F5F0 18%,
+    #FFD700 40%,       /* Bulgari yellow gold */
+    #E5C100 58%,       /* Van Cleef vibrant */
+    #D4AF37 78%,       /* Cartier pure gold */
+    #C9A661 100%       /* Rolex champagne */
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 10px 32px rgba(212, 175, 55, 0.6);
+  filter: drop-shadow(0 4px 18px rgba(229, 193, 0, 0.5));
+  animation: soldShimmer 4s ease-in-out infinite;
+}
+
+@keyframes soldShimmer {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TEAM CARD - HERO ELEMENT
+   ═══════════════════════════════════════════════════════════ */
+
+.maison-team-card {
+  position: relative;
+  margin: 0 auto 12px;
+  max-width: 550px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.85) 0%,           /* Pure black base */
+    rgba(26, 26, 26, 0.8) 25%,        /* Rich charcoal */
+    rgba(30, 58, 138, 0.45) 50%,      /* Royal blue accent */
+    rgba(88, 28, 135, 0.5) 75%,       /* Imperial purple accent */
+    rgba(0, 0, 0, 0.85) 100%          /* Pure black */
+  );
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border-radius: 20px;
+  padding: 20px 35px;
+  box-shadow: 
+    0 16px 55px rgba(0, 0, 0, 0.85),
+    0 0 70px rgba(212, 175, 55, 0.15),
+    0 0 40px rgba(30, 58, 138, 0.1),
+    inset 0 1px 0 rgba(212, 175, 55, 0.2),
+    inset 0 -1px 0 rgba(30, 58, 138, 0.15);
+  animation: teamCardReveal 2s cubic-bezier(0.19, 1, 0.22, 1) 0.4s backwards;
+  overflow: hidden;
+}
+
+@keyframes teamCardReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.team-card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  border: 1.5px solid transparent;
+  background: linear-gradient(
+    135deg, 
+    rgba(212, 175, 55, 0.6) 0%,      /* Cartier pure gold */
+    rgba(229, 193, 0, 0.4) 33%,      /* Van Cleef vibrant */
+    rgba(255, 215, 0, 0.3) 66%,      /* Bulgari yellow gold */
+    rgba(212, 175, 55, 0.2) 100%     /* Cartier fade */
+  ) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderShimmer 4s ease-in-out infinite;
+}
+
+@keyframes borderShimmer {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.team-card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.team-label {
+  font-family: 'Montserrat', 'Arial', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  background: linear-gradient(
+    90deg,
+    #D4AF37 0%,        /* Cartier pure gold */
+    #FFD700 50%,       /* Bulgari yellow gold */
+    #D4AF37 100%       /* Cartier pure gold */
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
+
+.team-name {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #FFFFFF;
+  text-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 4px 16px rgba(201, 166, 97, 0.2);
+  animation: teamNameGlow 3s ease-in-out infinite;
+}
+
+@keyframes teamNameGlow {
+  0%, 100% {
+    text-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      0 4px 16px rgba(201, 166, 97, 0.2);
+  }
+  50% {
+    text-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      0 4px 20px rgba(201, 166, 97, 0.4);
+  }
+}
+
+.team-card-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.18) 35%,     /* Gold shimmer */
+    rgba(30, 58, 138, 0.15) 50%,      /* Royal blue */
+    rgba(88, 28, 135, 0.12) 65%,      /* Purple */
+    transparent 100%
+  );
+  animation: shimmerSweep 3s ease-in-out infinite;
+}
+
+@keyframes shimmerSweep {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEPARATOR - LUXURY DIVIDER
+   ═══════════════════════════════════════════════════════════ */
+
+.maison-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px auto;
+  max-width: 400px;
+  gap: 15px;
+  animation: separatorFade 2.2s cubic-bezier(0.19, 1, 0.22, 1) 0.6s backwards;
+}
+
+@keyframes separatorFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.separator-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.35) 20%,     /* Cartier pure gold */
+    rgba(30, 58, 138, 0.25) 40%,      /* Royal blue */
+    rgba(229, 193, 0, 0.6) 50%,       /* Van Cleef center */
+    rgba(88, 28, 135, 0.25) 60%,      /* Purple */
+    rgba(212, 175, 55, 0.35) 80%,     /* Cartier pure gold */
+    transparent 100%
+  );
+}
+
+.separator-jewel {
+  font-size: 16px;
+  color: #FFD700;  /* Bulgari yellow gold */
+  text-shadow: 
+    0 0 20px rgba(229, 193, 0, 0.9),     /* Van Cleef glow */
+    0 0 12px rgba(212, 175, 55, 0.7),    /* Cartier glow */
+    0 0 6px rgba(255, 215, 0, 0.5);      /* Bulgari glow */
+  animation: jewelRotate 8s linear infinite;
+}
+
+@keyframes jewelRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AMOUNT DISPLAY - PREMIUM VALUATION
+   ═══════════════════════════════════════════════════════════ */
+
+.maison-amount-display {
+  position: relative;
+  margin: 12px auto 15px;
+  max-width: 550px;
+  animation: amountReveal 2.4s cubic-bezier(0.19, 1, 0.22, 1) 0.8s backwards;
+  overflow: hidden;
+}
+
+@keyframes amountReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.amount-prestige-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.9) 0%,            /* Pure black base */
+    rgba(26, 26, 26, 0.85) 25%,       /* Rich charcoal */
+    rgba(30, 58, 138, 0.5) 50%,       /* Royal blue center */
+    rgba(88, 28, 135, 0.55) 75%,      /* Imperial purple */
+    rgba(0, 0, 0, 0.9) 100%           /* Pure black */
+  );
+  backdrop-filter: blur(32px) saturate(1.6);
+  -webkit-backdrop-filter: blur(32px) saturate(1.6);
+  border-radius: 24px;
+  border: 2px solid rgba(212, 175, 55, 0.7);  /* Cartier pure gold */
+  box-shadow: 
+    0 20px 65px rgba(0, 0, 0, 0.9),
+    0 0 100px rgba(212, 175, 55, 0.3),        /* Cartier gold glow */
+    0 0 80px rgba(30, 58, 138, 0.2),          /* Royal blue glow */
+    0 0 60px rgba(88, 28, 135, 0.15),         /* Purple glow */
+    inset 0 2px 8px rgba(255, 255, 255, 0.15),
+    inset 0 -2px 8px rgba(212, 175, 55, 0.3);  /* Gold inner glow */
+}
+
+.amount-content-wrapper {
+  position: relative;
+  padding: 28px 42px;
+  z-index: 2;
+}
+
+.amount-label-text {
+  font-family: 'Montserrat', 'Arial', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  background: linear-gradient(
+    90deg,
+    #D4AF37 0%,        /* Cartier pure gold */
+    #E5C100 33%,       /* Van Cleef vibrant */
+    #FFD700 66%,       /* Bulgari yellow gold */
+    #D4AF37 100%       /* Cartier pure gold */
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  opacity: 0.98;
+}
+
+.amount-value-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+}
+
+.amount-currency {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 38px;
+  font-weight: 600;
+  background: linear-gradient(
+    135deg,
+    #D4AF37 0%,        /* Cartier pure gold */
+    #FFD700 25%,       /* Bulgari yellow gold */
+    #E5C100 50%,       /* Van Cleef vibrant */
+    #FFD700 75%,       /* Bulgari yellow gold */
+    #D4AF37 100%       /* Cartier pure gold */
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 16px rgba(212, 175, 55, 0.6));
+  animation: currencyFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes currencyFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.amount-number {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1.1;
+  background: linear-gradient(
+    180deg,
+    #FFFFFF 0%,
+    #F5F5F0 15%,
+    #FFD700 35%,       /* Bulgari yellow gold */
+    #E5C100 55%,       /* Van Cleef vibrant */
+    #D4AF37 75%,       /* Cartier pure gold */
+    #C9A661 100%       /* Rolex champagne */
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+  text-shadow: 0 8px 24px rgba(212, 175, 55, 0.6);
+  filter: drop-shadow(0 5px 20px rgba(229, 193, 0, 0.5));
+  animation: numberShine 4s ease-in-out infinite;
+}
+
+@keyframes numberShine {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+.amount-reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 60%
+  );
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRESTIGE FOOTER - Luxury Brand Signature
+   ═══════════════════════════════════════════════════════════ */
+
+.maison-prestige-footer {
+  margin-top: 30px;
+  padding: 0 20px;
+  text-align: center;
+  animation: footerFade 2.8s cubic-bezier(0.19, 1, 0.22, 1) 1.2s backwards;
+}
+
+@keyframes footerFade {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.prestige-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.3) 10%,      /* Cartier pure gold */
+    rgba(30, 58, 138, 0.4) 25%,       /* Royal blue */
+    rgba(255, 215, 0, 0.65) 40%,      /* Bulgari yellow gold */
+    rgba(88, 28, 135, 0.5) 50%,       /* Purple center */
+    rgba(255, 215, 0, 0.65) 60%,      /* Bulgari yellow gold */
+    rgba(30, 58, 138, 0.4) 75%,       /* Royal blue */
+    rgba(212, 175, 55, 0.3) 90%,      /* Cartier pure gold */
+    transparent 100%
+  );
+  margin-bottom: 20px;
+  animation: dividerShimmer 5s ease-in-out infinite;
+}
+
+@keyframes dividerShimmer {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.02);
+  }
+}
+
+.prestige-signature {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 3px;
+  background: linear-gradient(
+    135deg,
+    #D4AF37 0%,        /* Cartier pure gold */
+    #FFD700 18%,       /* Bulgari yellow gold */
+    #E5C100 35%,       /* Van Cleef vibrant */
+    #F5F5F0 50%,       /* Platinum white */
+    #E5C100 65%,       /* Van Cleef vibrant */
+    #FFD700 82%,       /* Bulgari yellow gold */
+    #D4AF37 100%       /* Cartier pure gold */
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.95;
+  animation: signatureGlow 6s ease-in-out infinite;
+}
+
+@keyframes signatureGlow {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 12px rgba(212, 175, 55, 0.4));
+    background-position: 0% 50%;
+  }
+  50% {
+    filter: brightness(1.4) drop-shadow(0 0 22px rgba(229, 193, 0, 0.6)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.4));
+    background-position: 100% 50%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AMBIENT GLOW - ATMOSPHERIC LIGHTING
+   ═══════════════════════════════════════════════════════════ */
+
+.maison-ambient-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(
+    to top,
+    rgba(212, 175, 55, 0.1) 0%,       /* Cartier gold base */
+    rgba(30, 58, 138, 0.06) 30%,      /* Royal blue */
+    rgba(88, 28, 135, 0.04) 50%,      /* Purple hint */
+    transparent 100%
+  );
+  pointer-events: none;
+  animation: glowPulse 8s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN - MOBILE OPTIMIZATION
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .maison-crown-emblem {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 28px;
+  }
+
+  .crown-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .maison-prestige-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+  }
+
+  .maison-sold-text {
+    font-size: 72px;
+  }
+
+  .maison-team-card {
+    padding: 28px 35px;
+    margin-bottom: 35px;
+  }
+
+  .team-label {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    margin-bottom: 10px;
+  }
+
+  .team-name {
+    font-size: 32px;
+  }
+
+  .maison-separator {
+    margin: 28px auto;
+    max-width: 300px;
+  }
+
+  .separator-jewel {
+    font-size: 14px;
+  }
+
+  .maison-amount-display {
+    margin: 32px auto;
+  }
+
+  .amount-content-wrapper {
+    padding: 35px 40px;
+  }
+
+  .amount-label-text {
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+  }
+
+  .amount-currency {
+    font-size: 32px;
+  }
+
+  .amount-number {
+    font-size: 48px;
+  }
+
+  .seal-check-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .seal-check-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .seal-text {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .maison-content-container {
+    padding: 20px;
+  }
+
+  .maison-crown-emblem {
+    width: 95px;
+    height: 95px;
+    margin-bottom: 24px;
+  }
+
+  .crown-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .maison-sold-text {
+    font-size: 58px;
+  }
+
+  .maison-team-card {
+    padding: 24px 28px;
+    border-radius: 16px;
+  }
+
+  .team-name {
+    font-size: 28px;
+  }
+
+  .amount-content-wrapper {
+    padding: 28px 30px;
+  }
+
+  .amount-currency {
+    font-size: 28px;
+  }
+
+  .amount-number {
+    font-size: 40px;
+  }
+}

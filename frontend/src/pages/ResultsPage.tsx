@@ -111,11 +111,36 @@ const ResultsPage: React.FC = () => {
     { label: 'Sold Amount', key: 'soldAmount' }
   ];
 
-  const csvData = players.map(p => ({
-    ...p,
-    teamName: teams.find(t => t._id === p.team)?.name || 'N/A',
-    soldAmount: p.soldAmount || 0
-  }));
+  const csvData = players.map(p => {
+    // Find team name with proper handling of populated team objects
+    let teamName = 'Unsold';
+    
+    if (p.team && p.status === 'sold') {
+      // Backend populates team with .populate('team', 'name') which returns { _id, name }
+      // Handle both populated object and string ID
+      const teamId = typeof p.team === 'object' ? (p.team as any)._id : p.team;
+      const teamNameFromPopulate = typeof p.team === 'object' ? (p.team as any).name : null;
+      
+      // If team is already populated with name, use it directly
+      if (teamNameFromPopulate) {
+        teamName = teamNameFromPopulate;
+      } else {
+        // Otherwise, find team in teams array
+        const foundTeam = teams.find(t => String(t._id).trim() === String(teamId).trim());
+        teamName = foundTeam?.name || 'Unknown Team';
+      }
+    } else if (p.status === 'unsold') {
+      teamName = 'Unsold';
+    } else if (p.status === 'available') {
+      teamName = 'Not Yet Auctioned';
+    }
+    
+    return {
+      ...p,
+      teamName,
+      soldAmount: p.soldAmount || 0
+    };
+  });
 
   // Position color mapping based on color theory
   const getPositionColor = (position: string) => {

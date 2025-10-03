@@ -1,328 +1,464 @@
 import React from 'react';
-import { Player } from '../../types';
 
 interface PlayerCardProps {
-  player: Player;
-  onSoldClick?: () => void;
-  onUnsold?: () => void;
-  soldAmount?: number;
-  onAmountChange?: (amount: number) => void;
-  isLoading?: boolean;
+  player: {
+    _id: string;
+    name: string;
+    regNo: string;
+    class: string;
+    position: string;
+    photoUrl?: string;
+  };
+  soldAmount: number;
+  setSoldAmount: (amount: number) => void;
+  handleSoldClick: () => void;
+  handleUnsoldClick: () => void;
+  loading: boolean;
 }
+
+const getPositionColor = (position: string) => {
+  const pos = position.toLowerCase();
+  if (pos === 'batsman') return { gradient: 'from-amber-400 to-orange-600', light: '#fbbf24', dark: '#ea580c' };
+  if (pos === 'bowler') return { gradient: 'from-blue-400 to-indigo-600', light: '#60a5fa', dark: '#4f46e5' };
+  if (pos === 'all-rounder') return { gradient: 'from-green-400 to-emerald-600', light: '#4ade80', dark: '#059669' };
+  if (pos === 'wicket-keeper') return { gradient: 'from-purple-400 to-pink-600', light: '#c084fc', dark: '#db2777' };
+  return { gradient: 'from-gray-400 to-gray-600', light: '#9ca3af', dark: '#4b5563' };
+};
 
 const PlayerCard: React.FC<PlayerCardProps> = ({
   player,
-  onSoldClick,
-  onUnsold,
   soldAmount,
-  onAmountChange,
-  isLoading = false
+  setSoldAmount,
+  handleSoldClick,
+  handleUnsoldClick,
+  loading,
 }) => {
-  // Luxury color palette with sophisticated gradients
-  const getPositionColor = (position: string) => {
-    const colors: { [key: string]: { gradient: string; accent: string; glow: string; bg: string; } } = {
-      'Spiker': { 
-        gradient: 'from-rose-500 via-pink-500 to-fuchsia-500',
-        accent: 'from-rose-400 to-fuchsia-400',
-        glow: 'rose-500/40',
-        bg: 'from-rose-500/10 via-pink-500/5 to-fuchsia-500/10'
-      },
-      'Attacker': { 
-        gradient: 'from-orange-500 via-red-500 to-rose-500',
-        accent: 'from-orange-400 to-rose-400',
-        glow: 'orange-500/40',
-        bg: 'from-orange-500/10 via-red-500/5 to-rose-500/10'
-      },
-      'Setter': { 
-        gradient: 'from-blue-500 via-cyan-500 to-teal-500',
-        accent: 'from-blue-400 to-teal-400',
-        glow: 'cyan-500/40',
-        bg: 'from-blue-500/10 via-cyan-500/5 to-teal-500/10'
-      },
-      'Libero': { 
-        gradient: 'from-emerald-500 via-green-500 to-teal-500',
-        accent: 'from-emerald-400 to-teal-400',
-        glow: 'emerald-500/40',
-        bg: 'from-emerald-500/10 via-green-500/5 to-teal-500/10'
-      },
-      'Blocker': { 
-        gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
-        accent: 'from-violet-400 to-fuchsia-400',
-        glow: 'purple-500/40',
-        bg: 'from-violet-500/10 via-purple-500/5 to-fuchsia-500/10'
-      },
-      'All-rounder': { 
-        gradient: 'from-amber-500 via-yellow-500 to-orange-500',
-        accent: 'from-amber-400 to-orange-400',
-        glow: 'amber-500/40',
-        bg: 'from-amber-500/10 via-yellow-500/5 to-orange-500/10'
-      },
-    };
-    return colors[position] || { 
-      gradient: 'from-slate-500 via-gray-500 to-zinc-500',
-      accent: 'from-slate-400 to-zinc-400',
-      glow: 'gray-500/40',
-      bg: 'from-slate-500/10 via-gray-500/5 to-zinc-500/10'
-    };
-  };
-
-  const getPositionIcon = (position: string) => {
-    const icons: { [key: string]: string } = {
-      'Spiker': '⚡',
-      'Attacker': '🔥',
-      'Setter': '🎯',
-      'Libero': '🛡️',
-      'Blocker': '🚧',
-      'All-rounder': '⭐',
-    };
-    return icons[position] || '🏐';
-  };
-
   const positionColors = getPositionColor(player.position);
 
   return (
-    <div className="relative max-w-md mx-auto my-4">
-      {/* Luxury multi-layer ambient glow system */}
-      <div className="absolute -inset-4 opacity-50">
-        <div className={`absolute inset-0 bg-gradient-to-b ${positionColors.gradient} rounded-[2rem] blur-[40px] opacity-30 animate-pulse`}></div>
-      </div>
-      
-      {/* Premium Card Container - Vertical Layout - Compact */}
-      <div className="group relative bg-gradient-to-b from-[#0a0a0f] via-[#12121a] to-[#0a0a0f] rounded-[1.5rem] overflow-hidden border border-white/5 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] hover:shadow-[0_12px_48px_rgba(0,0,0,0.9)] transition-all duration-500">
-        
-        {/* Premium border shimmer effect */}
-        <div className="absolute inset-0 rounded-[1.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-          <div className={`absolute inset-0 bg-gradient-to-b ${positionColors.gradient} opacity-[0.08]`}></div>
-        </div>
+    <div className="premium-player-card-wrapper">
+      {/* Premium entrance animations */}
+      <style>{`
+        @keyframes elegantEntrance {
+          0% {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            filter: blur(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+          }
+        }
 
-        {/* Noise texture overlay for luxury feel */}
-        <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]"></div>
-        
-        {/* Vertical gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] via-transparent to-black/20 pointer-events-none"></div>
-        
-        {/* Card Content - Vertical Flow - Compact */}
-        <div className="relative">
-          
-          {/* Hero Section - Player Photo (Compact) */}
-          <div className="relative px-6 pt-6 pb-4">
-            
-            {/* Luxury Photo Frame - Centered & Large */}
-            <div className="relative mx-auto w-48 h-48">
-              {/* Premium multi-layer glow system */}
-              <div className={`absolute -inset-8 bg-gradient-to-b ${positionColors.gradient} rounded-full blur-[50px] opacity-40 animate-pulse`}></div>
-              <div className={`absolute -inset-4 bg-gradient-to-b ${positionColors.accent} rounded-full blur-[30px] opacity-30`}></div>
-              
-              {/* Rotating ring effect */}
-              <div className="absolute -inset-3 rounded-full opacity-60">
-                <div className={`absolute inset-0 bg-gradient-to-tr ${positionColors.gradient} rounded-full animate-spin`} style={{ animationDuration: '8s' }}></div>
-                <div className="absolute inset-[2px] bg-[#0a0a0f] rounded-full"></div>
-              </div>
-              
-              {/* Inner glow ring */}
-              <div className={`absolute -inset-2 bg-gradient-to-b ${positionColors.gradient} rounded-full opacity-50 blur-md`}></div>
-              
-              {/* Photo container with premium border */}
-              <div className="relative w-48 h-48 rounded-full overflow-hidden border-[3px] border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.9),inset_0_0_30px_rgba(0,0,0,0.5)]">
-                {/* Inner highlight */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent rounded-full"></div>
-                
-                {player.photoUrl && player.photoUrl.trim() !== '' ? (
-                  <img 
-                    src={player.photoUrl} 
-                    alt={player.name}
-                    crossOrigin="anonymous"
-                    referrerPolicy="no-referrer"
-                    className="relative w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br ${positionColors.gradient} flex items-center justify-center text-6xl font-black text-white shadow-inner">${player.name.charAt(0).toUpperCase()}</div>`;
-                    }}
-                  />
-                ) : (
-                  <div className={`w-full h-full bg-gradient-to-br ${positionColors.gradient} flex items-center justify-center text-6xl font-black text-white shadow-inner`}>
-                    {player.name.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-              
-              {/* Premium position badge - Floating */}
-              <div className={`absolute -bottom-3 left-1/2 transform -translate-x-1/2 px-4 py-1.5 bg-gradient-to-r ${positionColors.gradient} rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] border border-white/10 backdrop-blur-xl hover:scale-110 transition-all duration-300`}>
-                <div className="relative flex items-center gap-2">
-                  <span className="text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{getPositionIcon(player.position)}</span>
-                  <span className="text-xs font-black text-white uppercase tracking-[0.12em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{player.position}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        @keyframes luxuryGlow {
+          0%, 100% {
+            box-shadow: 0 10px 50px rgba(234, 179, 8, 0.3);
+          }
+          50% {
+            box-shadow: 0 20px 80px rgba(234, 179, 8, 0.5);
+          }
+        }
 
-          {/* Player Name - Centered & Dramatic */}
-          <div className="px-6 pb-2 text-center">
-            <h2 className={`text-2xl font-black mb-1 tracking-tight bg-gradient-to-b from-white via-white to-gray-400 text-transparent bg-clip-text drop-shadow-[0_2px_20px_rgba(255,255,255,0.3)]`}>
-              {player.name}
-            </h2>
-            
-            {/* Animated accent line */}
-            <div className="flex justify-center mb-1">
-              <div className="relative h-0.5 w-20 rounded-full overflow-hidden bg-white/5">
-                <div className={`absolute inset-0 bg-gradient-to-r ${positionColors.gradient} transform origin-center group-hover:scale-x-[1.5] transition-transform duration-700`}></div>
-              </div>
-            </div>
-          </div>
+        @keyframes goldShimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(400%);
+          }
+        }
 
-          {/* Premium Info Cards - Horizontal Layout */}
-          <div className="px-6 pb-2 flex gap-2">
-            
-            {/* Registration Card */}
-            <div className="group/card relative bg-white/[0.02] rounded-lg p-1.5 backdrop-blur-xl border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden hover:bg-white/[0.04] flex-1">
-              {/* Hover gradient effect */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${positionColors.bg} opacity-0 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
-              
-              <div className="relative flex flex-col items-center">
-                <div className={`w-6 h-6 rounded-md bg-gradient-to-br ${positionColors.gradient} flex items-center justify-center shadow-lg mb-0.5`}>
-                  <span className="text-[10px]">🎓</span>
-                </div>
-                <p className="text-[7px] font-bold text-gray-500 uppercase tracking-widest mb-0.5">Reg No</p>
-                <p className="text-[10px] font-black text-white tracking-wide">{player.regNo}</p>
-              </div>
-            </div>
+        @keyframes photoReveal {
+          0% {
+            opacity: 0;
+            filter: blur(20px);
+            transform: scale(1.1);
+          }
+          100% {
+            opacity: 1;
+            filter: blur(0);
+            transform: scale(1);
+          }
+        }
 
-            {/* Class Card */}
-            <div className="group/card relative bg-white/[0.02] rounded-lg p-1.5 backdrop-blur-xl border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden hover:bg-white/[0.04] flex-1">
-              {/* Hover gradient effect */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${positionColors.bg} opacity-0 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
-              
-              <div className="relative flex flex-col items-center">
-                <div className={`w-6 h-6 rounded-md bg-gradient-to-br ${positionColors.gradient} flex items-center justify-center shadow-lg mb-0.5`}>
-                  <span className="text-[10px]">📚</span>
-                </div>
-                <p className="text-[7px] font-bold text-gray-500 uppercase tracking-widest mb-0.5">Class</p>
-                <p className="text-[10px] font-black text-white tracking-wide">{player.class}</p>
-              </div>
-            </div>
-          </div>
+        @keyframes badgeEntrance {
+          0% {
+            opacity: 0;
+            transform: translateY(-10px) rotate(-10deg);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) rotate(0);
+          }
+        }
 
-          {/* Amount Input Section - Premium Design */}
-          <div className="px-6 pb-1.5">
-            <label className="flex items-center justify-center gap-1 text-[8px] font-black text-gray-400 uppercase tracking-[0.1em] mb-1.5">
-              <div className={`w-5 h-5 rounded-md bg-gradient-to-br ${positionColors.gradient} flex items-center justify-center shadow-lg`}>
-                <span className="text-[10px]">💰</span>
+        @keyframes contentFadeIn {
+          0% {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes buttonSlide {
+          0% {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes floatingParticle {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
+            opacity: 0.4;
+          }
+          50% {
+            transform: translateY(-20px) translateX(10px);
+            opacity: 0.8;
+          }
+        }
+
+        .premium-player-card-wrapper {
+          animation: elegantEntrance 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+          animation-fill-mode: both;
+        }
+
+        .luxury-card-container {
+          animation: luxuryGlow 3s ease-in-out infinite;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .luxury-card-container::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 215, 0, 0.3),
+            transparent
+          );
+          animation: goldShimmer 3s ease-in-out infinite;
+        }
+
+        .photo-reveal {
+          animation: photoReveal 0.8s ease-out 0.3s;
+          animation-fill-mode: both;
+        }
+
+        .badge-entrance {
+          animation: badgeEntrance 0.6s ease-out 0.7s;
+          animation-fill-mode: both;
+        }
+
+        .content-fade-1 {
+          animation: contentFadeIn 0.6s ease-out 0.9s;
+          animation-fill-mode: both;
+        }
+
+        .content-fade-2 {
+          animation: contentFadeIn 0.6s ease-out 1s;
+          animation-fill-mode: both;
+        }
+
+        .content-fade-3 {
+          animation: contentFadeIn 0.6s ease-out 1.1s;
+          animation-fill-mode: both;
+        }
+
+        .button-slide-1 {
+          animation: buttonSlide 0.5s ease-out 1.2s;
+          animation-fill-mode: both;
+        }
+
+        .button-slide-2 {
+          animation: buttonSlide 0.5s ease-out 1.3s;
+          animation-fill-mode: both;
+        }
+
+        .floating-particle {
+          animation: floatingParticle 4s ease-in-out infinite;
+        }
+
+        /* Rotating ring effect */
+        @keyframes rotateRing {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .rotating-ring {
+          animation: rotateRing 8s linear infinite;
+        }
+
+        /* Ultra Premium Button Styles */
+        .premium-sold-button,
+        .premium-unsold-button {
+          position: relative;
+          cursor: pointer;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+          transform-style: preserve-3d;
+          transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .premium-sold-button:hover:not(:disabled),
+        .premium-unsold-button:hover:not(:disabled) {
+          transform: translateY(-6px) scale(1.05);
+          filter: brightness(1.15) contrast(1.1);
+        }
+
+        .premium-sold-button:active:not(:disabled),
+        .premium-unsold-button:active:not(:disabled) {
+          transform: translateY(-2px) scale(1.02);
+          transition: all 0.15s ease-out;
+        }
+
+        /* Elegant pulse animation for hover state */
+        @keyframes elegantPulse {
+          0%, 100% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.05);
+          }
+        }
+
+        .premium-sold-button:hover:not(:disabled)::before,
+        .premium-unsold-button:hover:not(:disabled)::before {
+          animation: elegantPulse 2s ease-in-out infinite;
+        }
+
+        /* Radial gradient for premium feel */
+        @keyframes radialGlow {
+          0% {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          50% {
+            opacity: 0.4;
+          }
+          100% {
+            opacity: 0;
+            transform: scale(1.5);
+          }
+        }
+
+        /* Floating sparkle effect */
+        @keyframes floatSparkle {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+            opacity: 0;
+          }
+          50% {
+            transform: translateY(-8px) scale(1.2);
+            opacity: 1;
+          }
+        }
+      `}</style>
+
+      <div className="luxury-card-container relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl shadow-2xl p-8 border border-amber-500/30">
+        {/* Ambient floating particles */}
+        <div className="absolute top-4 right-4 w-2 h-2 bg-amber-400 rounded-full floating-particle" style={{ animationDelay: '0s' }}></div>
+        <div className="absolute top-12 left-8 w-1.5 h-1.5 bg-amber-300 rounded-full floating-particle" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-8 right-12 w-2 h-2 bg-amber-500 rounded-full floating-particle" style={{ animationDelay: '2s' }}></div>
+
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* Left Section: Photo and Info Cards */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-4">
+            {/* Photo with Rotating Ring */}
+            <div className="relative photo-reveal">
+              <div className="absolute inset-0 rotating-ring">
+                <div 
+                  className={`absolute inset-0 rounded-full bg-gradient-to-r ${positionColors.gradient} opacity-50 blur-md`}
+                  style={{ padding: '4px' }}
+                ></div>
               </div>
-              <span>Auction Amount</span>
-            </label>
-            
-            <div className="relative group/input">
-              {/* Premium focus glow */}
-              <div className={`absolute -inset-[2px] bg-gradient-to-r ${positionColors.gradient} rounded-xl opacity-0 group-focus-within/input:opacity-40 blur-xl transition-opacity duration-500`}></div>
-              
               <div className="relative">
-                {/* Currency icon - Compact */}
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-                  <div className={`text-lg font-black bg-gradient-to-r ${positionColors.gradient} text-transparent bg-clip-text drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]`}>
-                    ₹
-                  </div>
-                </div>
-                
-                {/* Premium input field */}
-                <input
-                  type="number"
-                  value={soldAmount || ''}
-                  onChange={(e) => onAmountChange?.(Number(e.target.value))}
-                  placeholder="Enter amount..."
-                  className="relative w-full pl-10 pr-3 py-2 bg-white/[0.02] border-2 border-white/10 rounded-xl text-white font-black text-sm text-center placeholder:text-gray-700 focus:border-white/20 focus:ring-4 focus:ring-white/5 focus:bg-white/[0.04] transition-all duration-500 backdrop-blur-xl hover:border-white/15 shadow-[inset_0_2px_20px_rgba(0,0,0,0.3)]"
+                <img
+                  src={player.photoUrl || '/default-avatar.png'}
+                  alt={player.name}
+                  className="w-56 h-56 rounded-full object-cover border-4 border-slate-800"
+                  style={{ boxShadow: `0 0 40px ${positionColors.light}` }}
                 />
-                
-                {/* Input highlight effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+              </div>
+              
+              {/* Position Badge Floating Below */}
+              <div className="badge-entrance mt-4">
+                <div
+                  className={`px-6 py-2 rounded-full bg-gradient-to-r ${positionColors.gradient} text-white font-bold text-sm shadow-lg`}
+                >
+                  {player.position}
+                </div>
+              </div>
+            </div>
+
+            {/* Info Cards Stacked */}
+            <div className="flex flex-col gap-3 w-full content-fade-1">
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-3 border border-amber-500/20">
+                <div className="text-xs text-amber-400/70 font-medium mb-1">Registration No.</div>
+                <div className="text-white font-bold">{player.regNo}</div>
+              </div>
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-3 border border-amber-500/20">
+                <div className="text-xs text-amber-400/70 font-medium mb-1">Class</div>
+                <div className="text-white font-bold">{player.class}</div>
               </div>
             </div>
           </div>
 
-          {/* Action Buttons - Horizontal Stack Premium */}
-          <div className="px-6 pb-2 flex gap-2">
-            
-            {/* Sold Button - Luxury Success Design */}
-            <button
-              onClick={onSoldClick}
-              disabled={isLoading || !soldAmount}
-              className="group/btn relative flex-1 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-[0.12em] transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:translate-y-0 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0 overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_32px_rgba(16,185,129,0.3)]"
-            >
-              {/* Multi-layer premium background */}
-              <div className="absolute inset-0 bg-gradient-to-b from-emerald-600 via-emerald-500 to-green-600"></div>
-              <div className="absolute inset-0 bg-gradient-to-b from-emerald-400 via-green-400 to-teal-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
-              
-              {/* Luxury shine effect */}
-              <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700">
-                <div className="absolute top-0 -left-full h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover/btn:left-full transition-all duration-1200 ease-out"></div>
-              </div>
+          {/* Right Section: Name, Amount Input, and Action Buttons */}
+          <div className="flex-1 flex flex-col justify-center gap-6">
+            {/* Player Name */}
+            <div className="content-fade-2">
+              <h1 
+                className="text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent mb-2"
+                style={{ 
+                  textShadow: '0 0 30px rgba(251, 191, 36, 0.5)',
+                  fontFamily: 'Georgia, serif'
+                }}
+              >
+                {player.name}
+              </h1>
+              <div className="h-1 w-32 bg-gradient-to-r from-amber-500 to-transparent rounded-full"></div>
+            </div>
 
-              {/* Premium outer glow */}
-              <div className="absolute -inset-[2px] bg-gradient-to-b from-emerald-400 to-green-400 rounded-2xl opacity-0 group-hover/btn:opacity-60 blur-xl transition-opacity duration-500"></div>
+            {/* Amount Input */}
+            <div className="content-fade-3">
+              <label className="block text-amber-400/90 font-semibold mb-3 text-lg">
+                Bid Amount (₹)
+              </label>
+              <input
+                type="number"
+                value={soldAmount}
+                onChange={(e) => setSoldAmount(Number(e.target.value))}
+                onFocus={(e) => {
+                  if (soldAmount === 0) {
+                    setSoldAmount(0);
+                    e.target.select(); // Select all text (the 0) so typing replaces it
+                  }
+                }}
+                className="w-full px-6 py-4 text-2xl font-bold bg-slate-800/80 border-2 border-amber-500/40 rounded-xl text-white focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 transition-all"
+                placeholder="Enter amount"
+                disabled={loading}
+                style={{ boxShadow: '0 4px 20px rgba(234, 179, 8, 0.15)' }}
+              />
+            </div>
 
-              {/* Inner highlight */}
-              <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-transparent rounded-2xl"></div>
+            {/* Ultra Premium Action Buttons - Designer Edition */}
+            <div className="flex gap-6 flex-col sm:flex-row">
+              {/* SOLD Button - Sophisticated Gold & Deep Green Luxury */}
+              <button
+                onClick={handleSoldClick}
+                disabled={loading}
+                className="button-slide-1 premium-sold-button group flex-1 relative py-6 px-10 rounded-2xl font-bold text-xl overflow-hidden transition-all duration-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {/* Rich jewel-tone gradient base - Deep emerald to forest */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0d9488] via-[#047857] to-[#065f46] opacity-95"></div>
+                
+                {/* Champagne gold luxury overlay - subtle elegance */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#d4af37]/40 via-[#f0e68c]/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                
+                {/* Premium metallic border system */}
+                <div className="absolute inset-0 rounded-2xl border-2 border-[#d4af37]/30 group-hover:border-[#d4af37]/60 transition-all duration-700"></div>
+                <div className="absolute -inset-0.5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-md"
+                  style={{ background: 'linear-gradient(135deg, #d4af37 0%, #0d9488 50%, #d4af37 100%)', zIndex: -1 }}>
+                </div>
+                
+                {/* Sophisticated shimmer - slower, more refined */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#faf8f3]/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[1800ms] ease-out"></div>
+                
+                {/* Inner glow for depth */}
+                <div className="absolute inset-0 rounded-2xl shadow-inner opacity-60"
+                  style={{ boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 -2px 4px rgba(255, 255, 255, 0.1)' }}>
+                </div>
 
-              <span className="relative flex items-center justify-center gap-1.5 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-                {isLoading ? (
-                  <>
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span className="text-xs">Wait...</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-base drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">✓</span>
-                    <span className="text-xs">Sold</span>
-                  </>
-                )}
-              </span>
-            </button>
+                {/* Button content */}
+                <span className="relative z-10 flex items-center justify-center gap-3 text-white drop-shadow-lg">
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span className="tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-7 h-7 drop-shadow-md group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                      </svg>
+                      <span className="tracking-[0.2em] font-black" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 12px rgba(0, 0, 0, 0.4)' }}>SOLD</span>
+                    </>
+                  )}
+                </span>
+              </button>
 
-            {/* Unsold Button - Luxury Danger Design */}
-            <button
-              onClick={onUnsold}
-              disabled={isLoading}
-              className="group/btn relative flex-1 px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-[0.12em] transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:translate-y-0 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0 overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_32px_rgba(239,68,68,0.3)]"
-            >
-              {/* Multi-layer premium background */}
-              <div className="absolute inset-0 bg-gradient-to-b from-red-600 via-red-500 to-rose-600"></div>
-              <div className="absolute inset-0 bg-gradient-to-b from-red-400 via-rose-400 to-pink-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
-              
-              {/* Luxury shine effect */}
-              <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700">
-                <div className="absolute top-0 -left-full h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 group-hover/btn:left-full transition-all duration-1200 ease-out"></div>
-              </div>
+              {/* UNSOLD Button - Refined Burgundy & Deep Rose Elegance */}
+              <button
+                onClick={handleUnsoldClick}
+                disabled={loading}
+                className="button-slide-2 premium-unsold-button group flex-1 relative py-6 px-10 rounded-2xl font-bold text-xl overflow-hidden transition-all duration-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {/* Deep sophisticated burgundy to maroon gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#be123c] via-[#9f1239] to-[#881337] opacity-95"></div>
+                
+                {/* Warm copper/bronze luxury overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#cd7f32]/40 via-[#b87333]/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                
+                {/* Premium metallic border system */}
+                <div className="absolute inset-0 rounded-2xl border-2 border-[#cd7f32]/30 group-hover:border-[#cd7f32]/60 transition-all duration-700"></div>
+                <div className="absolute -inset-0.5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-md"
+                  style={{ background: 'linear-gradient(135deg, #cd7f32 0%, #be123c 50%, #cd7f32 100%)', zIndex: -1 }}>
+                </div>
+                
+                {/* Sophisticated shimmer - slower, more refined */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#fff5f0]/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[1800ms] ease-out"></div>
+                
+                {/* Inner glow for depth */}
+                <div className="absolute inset-0 rounded-2xl shadow-inner opacity-60"
+                  style={{ boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 -2px 4px rgba(255, 255, 255, 0.1)' }}>
+                </div>
 
-              {/* Premium outer glow */}
-              <div className="absolute -inset-[2px] bg-gradient-to-b from-red-400 to-rose-400 rounded-2xl opacity-0 group-hover/btn:opacity-60 blur-xl transition-opacity duration-500"></div>
-
-              {/* Inner highlight */}
-              <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-transparent rounded-2xl"></div>
-
-              <span className="relative flex items-center justify-center gap-1.5 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-                <span className="text-base drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">✕</span>
-                <span className="text-xs">Unsold</span>
-              </span>
-            </button>
+                {/* Button content */}
+                <span className="relative z-10 flex items-center justify-center gap-3 text-white drop-shadow-lg">
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span className="tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-7 h-7 drop-shadow-md group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                      </svg>
+                      <span className="tracking-[0.2em] font-black" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 12px rgba(0, 0, 0, 0.4)' }}>UNSOLD</span>
+                    </>
+                  )}
+                </span>
+              </button>
+            </div>
           </div>
-
         </div>
-
-        {/* Bottom premium accent */}
-        <div className="relative h-1.5 overflow-hidden">
-          <div className={`absolute inset-0 bg-gradient-to-r ${positionColors.gradient}`}></div>
-          <div className={`absolute inset-0 bg-gradient-to-r ${positionColors.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
-        </div>
-      </div>
-
-      {/* Luxury floating particles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-[20%] left-[15%] w-3 h-3 bg-gradient-to-r ${positionColors.gradient} rounded-full opacity-20 animate-pulse`} style={{ animationDuration: '6s', animationDelay: '0s' }}></div>
-        <div className={`absolute top-[60%] right-[20%] w-2 h-2 bg-gradient-to-r ${positionColors.accent} rounded-full opacity-15 animate-pulse`} style={{ animationDuration: '8s', animationDelay: '2s' }}></div>
-        <div className={`absolute top-[40%] right-[10%] w-2.5 h-2.5 bg-gradient-to-r ${positionColors.gradient} rounded-full opacity-10 animate-pulse`} style={{ animationDuration: '7s', animationDelay: '4s' }}></div>
       </div>
     </div>
   );

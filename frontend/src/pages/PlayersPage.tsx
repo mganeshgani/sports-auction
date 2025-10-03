@@ -57,9 +57,18 @@ const PlayersPage: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      {/* Compact Header Section */}
-      <div className="flex-shrink-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 border-b border-gray-700/50 px-6 py-3">
-        <div className="flex items-center justify-between gap-4">
+      {/* Compact Header Section with Animation */}
+      <div className="relative flex-shrink-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 border-b border-gray-700/50 px-6 py-3 overflow-hidden">
+        {/* Mesmerizing Background Animation */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="aurora-bg-header"></div>
+          <div className="floating-orbs-header">
+            <div className="orb-header orb-header-1"></div>
+            <div className="orb-header orb-header-2"></div>
+            <div className="orb-header orb-header-3"></div>
+          </div>
+        </div>
+        <div className="relative z-10 flex items-center justify-between gap-4">
           {/* Title & CSV Upload - Combined */}
           <div className="flex items-center gap-4 flex-1">
             <div className="flex items-center gap-3">
@@ -223,7 +232,7 @@ const PlayersPage: React.FC = () => {
         </div>
       )}
 
-      {/* Custom Scrollbar Styles */}
+      {/* Custom Scrollbar Styles + Header Animation */}
       <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
@@ -238,6 +247,80 @@ const PlayersPage: React.FC = () => {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(to bottom, #2563eb, #7c3aed);
+        }
+
+        /* Header Aurora Animation */
+        @keyframes auroraHeader {
+          0%, 100% {
+            transform: translateX(0) scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: translateX(20px) scale(1.05);
+            opacity: 0.5;
+          }
+        }
+
+        .aurora-bg-header {
+          position: absolute;
+          width: 150%;
+          height: 150%;
+          top: -25%;
+          left: -25%;
+          background: radial-gradient(ellipse at 30% 50%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                      radial-gradient(ellipse at 70% 50%, rgba(168, 85, 247, 0.2) 0%, transparent 50%);
+          animation: auroraHeader 6s ease-in-out infinite;
+          filter: blur(30px);
+        }
+
+        /* Header Floating Orbs */
+        @keyframes floatHeader {
+          0%, 100% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(20px, -10px);
+          }
+        }
+
+        .floating-orbs-header {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+
+        .orb-header {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(15px);
+          opacity: 0.4;
+        }
+
+        .orb-header-1 {
+          width: 80px;
+          height: 80px;
+          background: radial-gradient(circle, rgba(99, 102, 241, 0.5), transparent);
+          top: -20%;
+          left: 20%;
+          animation: floatHeader 5s ease-in-out infinite;
+        }
+
+        .orb-header-2 {
+          width: 100px;
+          height: 100px;
+          background: radial-gradient(circle, rgba(168, 85, 247, 0.4), transparent);
+          top: -30%;
+          right: 30%;
+          animation: floatHeader 6s ease-in-out infinite 1s;
+        }
+
+        .orb-header-3 {
+          width: 70px;
+          height: 70px;
+          background: radial-gradient(circle, rgba(236, 72, 153, 0.5), transparent);
+          bottom: -20%;
+          left: 60%;
+          animation: floatHeader 7s ease-in-out infinite 2s;
         }
       `}</style>
     </div>

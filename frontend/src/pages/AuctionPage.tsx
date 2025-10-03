@@ -5,7 +5,7 @@ import SpinWheel from '../components/auction/SpinWheel';
 import PlayerCard from '../components/auction/PlayerCard';
 import TeamCard from '../components/auction/TeamCard';
 import TeamSelectionModal from '../components/auction/TeamSelectionModal';
-import confetti from 'canvas-confetti';
+import '../maisonCelebration.css';
 import io from 'socket.io-client';
 
 const AuctionPage: React.FC = () => {
@@ -16,6 +16,9 @@ const AuctionPage: React.FC = () => {
   const [soldAmount, setSoldAmount] = useState<number>(0);
   const [availableCount, setAvailableCount] = useState(0);
   const [showTeamModal, setShowTeamModal] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [celebrationAmount, setCelebrationAmount] = useState<number>(0);
+  const [celebrationTeamName, setCelebrationTeamName] = useState<string>('');
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
   const SOCKET_URL = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5001';
@@ -140,13 +143,21 @@ const AuctionPage: React.FC = () => {
         soldAmount: soldAmount
       });
 
-      // Play sold sound and confetti
+      // Play sold sound and show premium celebration overlay
       playSoldSound();
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
+      
+      // Find team name for celebration display
+      const acquiredTeam = teams.find(t => t._id === teamId);
+      
+      // Store celebration data
+      setCelebrationAmount(soldAmount);
+      setCelebrationTeamName(acquiredTeam?.name || 'Team');
+      setShowCelebration(true);
+
+      // Hide celebration after 6 seconds
+      setTimeout(() => {
+        setShowCelebration(false);
+      }, 6000);
 
       setShowPlayer(false);
       setCurrentPlayer(null);
@@ -235,10 +246,10 @@ const AuctionPage: React.FC = () => {
               <PlayerCard
                 player={currentPlayer}
                 soldAmount={soldAmount}
-                onAmountChange={setSoldAmount}
-                onSoldClick={handleSoldClick}
-                onUnsold={handleMarkUnsold}
-                isLoading={false}
+                setSoldAmount={setSoldAmount}
+                handleSoldClick={handleSoldClick}
+                handleUnsoldClick={handleMarkUnsold}
+                loading={false}
               />
               
               <TeamSelectionModal
@@ -253,7 +264,80 @@ const AuctionPage: React.FC = () => {
         </div>
       </div>
 
+      {/* � PROFESSIONAL LUXURY CELEBRATION OVERLAY � */}
+      {showCelebration && (
+        <div className="luxury-celebration-overlay">
+          {/* Deep Luxury Backdrop */}
+          <div className="maison-backdrop"></div>
+          
+          {/* Radial Light Accent */}
+          <div className="maison-radial-light"></div>
+
+          <div className="maison-content-container">
+            
+            {/* Crown Emblem - Ultra Premium */}
+            <div className="maison-crown-emblem">
+              <div className="crown-outer-glow"></div>
+              <div className="crown-ring-1"></div>
+              <div className="crown-ring-2"></div>
+              <div className="crown-center">
+                <svg className="crown-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L15 8.5L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L9 8.5L12 2Z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Acquisition Typography */}
+            <div className="maison-heading-section">
+              <div className="maison-prestige-label">ACQUISITION COMPLETE</div>
+              <h1 className="maison-sold-text">SOLD</h1>
+            </div>
+
+            {/* Team Acquisition Card - Hero Element */}
+            <div className="maison-team-card">
+              <div className="team-card-border"></div>
+              <div className="team-card-content">
+                <div className="team-label">ACQUIRED BY</div>
+                <div className="team-name">{celebrationTeamName}</div>
+              </div>
+              <div className="team-card-shimmer"></div>
+            </div>
+
+            {/* Ornamental Separator */}
+            <div className="maison-separator">
+              <div className="separator-line"></div>
+              <div className="separator-jewel">◆</div>
+              <div className="separator-line"></div>
+            </div>
+
+            {/* Premium Amount Display */}
+            <div className="maison-amount-display">
+              <div className="amount-prestige-bg"></div>
+              <div className="amount-content-wrapper">
+                <div className="amount-label-text">FINAL VALUATION</div>
+                <div className="amount-value-row">
+                  <span className="amount-currency">₹</span>
+                  <span className="amount-number">{celebrationAmount.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+              <div className="amount-reflection"></div>
+            </div>
+          </div>
+
+          {/* Prestige Footer Signature */}
+          <div className="maison-prestige-footer">
+            <div className="prestige-divider"></div>
+            <div className="prestige-signature">MAISON DE PRESTIGE</div>
+          </div>
+
+          {/* Ambient Luxury Glow */}
+          <div className="maison-ambient-glow"></div>
+          
+        </div>
+      )}
+
       <style>{`
+        /* Scrollbar Styles */
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
@@ -267,6 +351,734 @@ const AuctionPage: React.FC = () => {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(to bottom, #2563eb, #7c3aed);
+        }
+
+        /* � PROFESSIONAL LUXURY CELEBRATION STYLES � */
+        
+        /* Main Overlay with Sophisticated Background */
+        .celebration-overlay-premium {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: #000000;
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: elegantFadeIn 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+          overflow: hidden;
+        }
+
+        @keyframes elegantFadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        /* Radial Gradient Background */
+        .celebration-bg-gradient {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(ellipse at center,
+            rgba(20, 25, 35, 1) 0%,
+            rgba(10, 15, 25, 1) 30%,
+            rgba(5, 8, 15, 1) 60%,
+            rgba(0, 0, 0, 1) 100%
+          );
+          animation: gradientPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gradientPulse {
+          0%, 100% {
+            opacity: 0.9;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.05);
+          }
+        }
+
+        /* Elegant Grid Pattern */
+        .elegant-grid-pattern {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: 
+            linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+          background-size: 50px 50px;
+          opacity: 0;
+          animation: gridFadeIn 2s ease-out 0.5s forwards;
+        }
+
+        @keyframes gridFadeIn {
+          to {
+            opacity: 1;
+          }
+        }
+
+        /* Content Container */
+        .celebration-content-premium {
+          position: relative;
+          z-index: 10001;
+          text-align: center;
+          animation: contentSlideUp 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+          max-width: 900px;
+          padding: 40px;
+        }
+
+        @keyframes contentSlideUp {
+          from {
+            opacity: 0;
+            transform: translateY(60px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Premium Badge with 3D Effect */
+        .premium-badge-container {
+          position: relative;
+          width: 200px;
+          height: 200px;
+          margin: 0 auto 60px;
+          perspective: 1000px;
+        }
+
+        .badge-glow-ring {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          border: 2px solid rgba(212, 175, 55, 0.4);
+          animation: ringExpand 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .badge-glow-ring.ring-1 {
+          width: 100%;
+          height: 100%;
+          animation-delay: 0s;
+        }
+
+        .badge-glow-ring.ring-2 {
+          width: 100%;
+          height: 100%;
+          animation-delay: 1s;
+        }
+
+        .badge-glow-ring.ring-3 {
+          width: 100%;
+          height: 100%;
+          animation-delay: 2s;
+        }
+
+        @keyframes ringExpand {
+          0% {
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+            border-width: 3px;
+          }
+          50% {
+            width: 140%;
+            height: 140%;
+            opacity: 0.3;
+            border-width: 2px;
+          }
+          100% {
+            width: 180%;
+            height: 180%;
+            opacity: 0;
+            border-width: 1px;
+          }
+        }
+
+        .premium-badge-3d {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 160px;
+          height: 160px;
+          animation: badge3DFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes badge3DFloat {
+          0%, 100% {
+            transform: translate(-50%, -50%) rotateY(0deg) translateY(0);
+          }
+          50% {
+            transform: translate(-50%, -50%) rotateY(15deg) translateY(-15px);
+          }
+        }
+
+        .badge-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(145deg, 
+            #d4af37 0%,
+            #f4e5a0 25%,
+            #d4af37 50%,
+            #b8960c 75%,
+            #d4af37 100%
+          );
+          border-radius: 50%;
+          box-shadow: 
+            0 20px 60px rgba(212, 175, 55, 0.4),
+            0 10px 30px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .badge-shine-layer {
+          position: absolute;
+          top: 10%;
+          left: 10%;
+          right: 10%;
+          bottom: 10%;
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.4) 0%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.2) 100%
+          );
+          border-radius: 50%;
+          animation: shineRotate 4s linear infinite;
+        }
+
+        @keyframes shineRotate {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .trophy-icon {
+          width: 75px;
+          height: 75px;
+          color: #ffffff;
+          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+          animation: trophyGlow 2s ease-in-out infinite;
+          position: relative;
+          z-index: 1;
+        }
+
+        @keyframes trophyGlow {
+          0%, 100% {
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+            transform: scale(1);
+          }
+          50% {
+            filter: drop-shadow(0 6px 20px rgba(212, 175, 55, 0.8));
+            transform: scale(1.08);
+          }
+        }
+
+        /* Elegant Title */
+        .sold-title-elegant {
+          position: relative;
+          margin-bottom: 60px;
+        }
+
+        .title-backdrop {
+          font-size: 160px;
+          font-weight: 900;
+          font-family: 'Georgia', serif;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(212, 175, 55, 0.15);
+          letter-spacing: 20px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1;
+          animation: backdropScale 3s ease-in-out infinite;
+        }
+
+        @keyframes backdropScale {
+          0%, 100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: translate(-50%, -50%) scale(1.05);
+            opacity: 0.5;
+          }
+        }
+
+        .title-main {
+          font-size: 120px;
+          font-weight: 700;
+          font-family: 'Georgia', serif;
+          letter-spacing: 18px;
+          margin: 0;
+          position: relative;
+          z-index: 2;
+          background: linear-gradient(135deg,
+            #ffffff 0%,
+            #f4e5a0 25%,
+            #d4af37 50%,
+            #b8960c 75%,
+            #d4af37 100%
+          );
+          background-size: 200% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: titleShimmer 3s ease-in-out infinite;
+          filter: drop-shadow(0 4px 20px rgba(212, 175, 55, 0.5));
+        }
+
+        @keyframes titleShimmer {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        .title-underline {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 15px;
+          margin-top: 25px;
+          animation: underlineExpand 1.5s ease-out 0.5s backwards;
+        }
+
+        @keyframes underlineExpand {
+          from {
+            opacity: 0;
+            transform: scaleX(0);
+          }
+          to {
+            opacity: 1;
+            transform: scaleX(1);
+          }
+        }
+
+        .underline-segment {
+          width: 120px;
+          height: 2px;
+          background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(212, 175, 55, 0.8) 50%,
+            transparent 100%
+          );
+          animation: segmentGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes segmentGlow {
+          0%, 100% {
+            opacity: 0.6;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+
+        .underline-diamond {
+          font-size: 18px;
+          color: #d4af37;
+          animation: diamondRotate 4s linear infinite;
+        }
+
+        @keyframes diamondRotate {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        /* Glass Card for Amount */
+        .amount-glass-card {
+          position: relative;
+          display: inline-block;
+          margin: 40px 0;
+          animation: cardAppear 1.2s ease-out 0.8s backwards;
+        }
+
+        @keyframes cardAppear {
+          from {
+            opacity: 0;
+            transform: translateY(40px) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .glass-card-inner {
+          position: relative;
+          background: linear-gradient(145deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.03) 100%
+          );
+          backdrop-filter: blur(40px) saturate(150%);
+          border: 2px solid rgba(212, 175, 55, 0.25);
+          border-radius: 24px;
+          padding: 45px 80px;
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 0 0 1px rgba(212, 175, 55, 0.1);
+          overflow: hidden;
+          animation: cardFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-12px);
+          }
+        }
+
+        .card-shimmer {
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: linear-gradient(
+            60deg,
+            transparent 40%,
+            rgba(255, 255, 255, 0.08) 50%,
+            transparent 60%
+          );
+          animation: shimmerSwipe 4s linear infinite;
+        }
+
+        @keyframes shimmerSwipe {
+          from {
+            transform: translateX(-100%);
+          }
+          to {
+            transform: translateX(100%);
+          }
+        }
+
+        .amount-section {
+          position: relative;
+          z-index: 1;
+        }
+
+        .amount-label-elegant {
+          font-size: 14px;
+          font-weight: 600;
+          color: rgba(212, 175, 55, 0.9);
+          text-transform: uppercase;
+          letter-spacing: 4px;
+          margin-bottom: 15px;
+          font-family: 'Arial', sans-serif;
+        }
+
+        .amount-display-elegant {
+          display: flex;
+          align-items: baseline;
+          justify-content: center;
+          gap: 12px;
+        }
+
+        .currency-elegant {
+          font-size: 42px;
+          font-weight: 700;
+          color: #d4af37;
+          font-family: 'Georgia', serif;
+          animation: currencyPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes currencyPulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.9;
+          }
+          50% {
+            transform: scale(1.1);
+            opacity: 1;
+          }
+        }
+
+        .amount-value-elegant {
+          font-size: 68px;
+          font-weight: 900;
+          font-family: 'Georgia', serif;
+          background: linear-gradient(180deg,
+            #ffffff 0%,
+            #f4e5a0 30%,
+            #d4af37 60%,
+            #b8960c 100%
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          letter-spacing: 2px;
+          animation: amountGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes amountGlow {
+          0%, 100% {
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
+          }
+          50% {
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));
+          }
+        }
+
+        /* Status Badge */
+        .status-badge-elegant {
+          display: inline-flex;
+          align-items: center;
+          gap: 15px;
+          background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.15) 0%,
+            rgba(5, 150, 105, 0.1) 100%
+          );
+          backdrop-filter: blur(20px);
+          border: 1.5px solid rgba(16, 185, 129, 0.3);
+          border-radius: 50px;
+          padding: 16px 40px;
+          margin-top: 50px;
+          animation: badgeSlideIn 1.2s ease-out 1.2s backwards;
+        }
+
+        @keyframes badgeSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .status-icon-wrapper {
+          width: 36px;
+          height: 36px;
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+          animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+          }
+          50% {
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.7);
+          }
+        }
+
+        .status-check-icon {
+          width: 20px;
+          height: 20px;
+          color: white;
+          stroke-width: 3;
+        }
+
+        .status-text {
+          font-size: 16px;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.95);
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          font-family: 'Arial', sans-serif;
+        }
+
+        /* Elegant Particles */
+        .particle-field-elegant {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        .elegant-particle {
+          position: absolute;
+          background: radial-gradient(circle, 
+            rgba(212, 175, 55, 0.8) 0%, 
+            rgba(212, 175, 55, 0.4) 50%,
+            transparent 100%
+          );
+          border-radius: 50%;
+          animation: particleFloat linear infinite;
+          opacity: 0;
+        }
+
+        @keyframes particleFloat {
+          0% {
+            transform: translateY(100vh) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh) translateX(calc(-50px + (var(--tx, 0) * 100px)));
+            opacity: 0;
+          }
+        }
+
+        /* Light Beams */
+        .light-beams-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        .light-beam {
+          position: absolute;
+          top: -50%;
+          width: 150px;
+          height: 200%;
+          background: linear-gradient(to bottom,
+            transparent 0%,
+            rgba(212, 175, 55, 0.08) 50%,
+            transparent 100%
+          );
+          opacity: 0;
+          animation: beamSweep 8s ease-in-out infinite;
+        }
+
+        .light-beam.beam-1 {
+          left: 20%;
+          animation-delay: 0s;
+        }
+
+        .light-beam.beam-2 {
+          left: 50%;
+          animation-delay: 2.5s;
+        }
+
+        .light-beam.beam-3 {
+          left: 75%;
+          animation-delay: 5s;
+        }
+
+        @keyframes beamSweep {
+          0%, 100% {
+            opacity: 0;
+            transform: translateX(-50px) rotate(-10deg);
+          }
+          50% {
+            opacity: 1;
+            transform: translateX(50px) rotate(10deg);
+          }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .celebration-content-premium {
+            padding: 20px;
+          }
+
+          .premium-badge-container {
+            width: 140px;
+            height: 140px;
+            margin-bottom: 40px;
+          }
+          
+          .premium-badge-3d {
+            width: 120px;
+            height: 120px;
+          }
+
+          .badge-inner {
+            width: 100%;
+            height: 100%;
+          }
+          
+          .trophy-icon {
+            width: 55px;
+            height: 55px;
+          }
+
+          .title-backdrop {
+            font-size: 90px;
+            letter-spacing: 12px;
+          }
+          
+          .title-main {
+            font-size: 70px;
+            letter-spacing: 12px;
+          }
+
+          .underline-segment {
+            width: 60px;
+          }
+
+          .glass-card-inner {
+            padding: 30px 40px;
+          }
+          
+          .amount-value-elegant {
+            font-size: 48px;
+          }
+          
+          .currency-elegant {
+            font-size: 32px;
+          }
+
+          .status-badge-elegant {
+            padding: 12px 30px;
+            gap: 12px;
+          }
+          
+          .status-text {
+            font-size: 13px;
+          }
+
+          .status-icon-wrapper {
+            width: 30px;
+            height: 30px;
+          }
+
+          .status-check-icon {
+            width: 16px;
+            height: 16px;
+          }
         }
       `}</style>
 
