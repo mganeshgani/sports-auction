@@ -37,6 +37,10 @@
       "dest": "/logo$1.png"
     },
     {
+      "src": "/wings.png",
+      "dest": "/wings.png"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
