@@ -8,6 +8,7 @@ const ResultsPage: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [stats, setStats] = useState({
     total: 0,
     sold: 0,
@@ -145,22 +146,24 @@ const ResultsPage: React.FC = () => {
   // Position color mapping based on color theory
   const getPositionColor = (position: string) => {
     const colors: { [key: string]: string } = {
-      'Batsman': 'from-amber-500/20 via-yellow-500/20 to-orange-500/20 border-amber-500/40',
-      'Bowler': 'from-blue-500/20 via-cyan-500/20 to-teal-500/20 border-blue-500/40',
-      'All-Rounder': 'from-purple-500/20 via-pink-500/20 to-rose-500/20 border-purple-500/40',
-      'Wicket-Keeper': 'from-emerald-500/20 via-green-500/20 to-lime-500/20 border-emerald-500/40',
+      'Spiker': 'from-amber-500/20 via-yellow-500/20 to-orange-500/20 border-amber-500/40',
+      'Setter': 'from-purple-500/20 via-pink-500/20 to-rose-500/20 border-purple-500/40',
+      'Libero': 'from-blue-500/20 via-cyan-500/20 to-teal-500/20 border-blue-500/40',
+      'Blocker': 'from-red-500/20 via-rose-500/20 to-pink-500/20 border-red-500/40',
+      'All-Rounder': 'from-emerald-500/20 via-green-500/20 to-lime-500/20 border-emerald-500/40',
     };
     return colors[position] || 'from-gray-500/20 via-slate-500/20 to-zinc-500/20 border-gray-500/40';
   };
 
   const getPositionIcon = (position: string) => {
     const icons: { [key: string]: string } = {
-      'Batsman': 'BAT',
-      'Bowler': 'BWL',
-      'All-Rounder': 'AR',
-      'Wicket-Keeper': 'WK',
+      'Spiker': '🏐',
+      'Setter': '⭐',
+      'Libero': '🛡️',
+      'Blocker': '🔥',
+      'All-Rounder': '💪',
     };
-    return icons[position] || 'POS';
+    return icons[position] || '🏐';
   };
 
   return (
@@ -281,7 +284,7 @@ const ResultsPage: React.FC = () => {
           {/* Horizontal Teams Container */}
           <div className="flex gap-4 pb-4 min-h-0" style={{ minWidth: 'max-content' }}>
             {teams.map((team, index) => {
-              const teamPlayers = players.filter(p => p.team === team._id);
+              const teamPlayers = players.filter(p => (p.team === team._id || p.team === team.name) && p.status === 'sold');
               const spent = teamPlayers.reduce((sum, p) => sum + (p.soldAmount || 0), 0);
               
               // Use backend data when available, fallback to calculated values
@@ -325,7 +328,8 @@ const ResultsPage: React.FC = () => {
               return (
                 <div
                   key={`${team._id}-${actualFilledSlots}-${actualSpent}-${actualRemaining}`}
-                  className={`group flex-shrink-0 w-72 sm:w-80 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10`}
+                  onClick={() => setSelectedTeam(team)}
+                  className={`group flex-shrink-0 w-72 sm:w-80 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10 cursor-pointer`}
                   style={{ maxHeight: 'calc(100vh - 180px)' }}
                 >
                   {/* Animated Background */}
@@ -399,9 +403,10 @@ const ResultsPage: React.FC = () => {
                           <div
                             key={player._id}
                             className={`group/player relative overflow-hidden bg-gradient-to-br ${getPositionColor(player.position)} backdrop-blur-sm rounded-lg p-2 border ${
-                              player.position === 'Batsman' ? 'border-amber-500/40' : 
-                              player.position === 'Bowler' ? 'border-blue-500/40' : 
-                              player.position === 'All-Rounder' ? 'border-purple-500/40' : 
+                              player.position === 'Spiker' ? 'border-amber-500/40' : 
+                              player.position === 'Setter' ? 'border-purple-500/40' : 
+                              player.position === 'Libero' ? 'border-blue-500/40' :
+                              player.position === 'Blocker' ? 'border-red-500/40' : 
                               'border-emerald-500/40'
                             } hover:scale-102 transition-all duration-300`}
                           >
@@ -436,6 +441,228 @@ const ResultsPage: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* Team Details Modal */}
+      {selectedTeam && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={() => setSelectedTeam(null)}
+        >
+          <div 
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 10, 10, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+              border: '2px solid rgba(212, 175, 55, 0.4)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 0 100px rgba(212, 175, 55, 0.2)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="sticky top-0 z-10 px-6 py-4 border-b" style={{
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(0, 0, 0, 0.8) 100%)',
+              borderBottom: '1px solid rgba(212, 175, 55, 0.3)'
+            }}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-3xl font-black tracking-tight" style={{
+                    background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    filter: 'drop-shadow(0 0 20px rgba(212, 175, 55, 0.4))'
+                  }}>
+                    {selectedTeam.name}
+                  </h2>
+                  <p className="text-sm text-gray-400 mt-1 font-medium">Team Squad Overview</p>
+                </div>
+                <button
+                  onClick={() => setSelectedTeam(null)}
+                  className="group p-2 rounded-lg transition-all hover:bg-red-500/20 hover:scale-110"
+                  style={{
+                    border: '1px solid rgba(239, 68, 68, 0.3)'
+                  }}
+                >
+                  <svg className="w-6 h-6 text-red-400 group-hover:text-red-300 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Team Stats Summary */}
+              <div className="flex gap-3 mt-4">
+                {(() => {
+                  // Use team.players array if available, otherwise filter from global players
+                  const teamPlayers = selectedTeam.players && selectedTeam.players.length > 0
+                    ? selectedTeam.players
+                    : players.filter(p => (p.team === selectedTeam._id || p.team === selectedTeam.name) && p.status === 'sold');
+                  const spent = teamPlayers.reduce((sum, p) => sum + (p.soldAmount || 0), 0);
+                  const actualRemaining = selectedTeam.remainingBudget !== undefined && selectedTeam.remainingBudget !== null 
+                    ? selectedTeam.remainingBudget 
+                    : (selectedTeam.budget || 0) - spent;
+                  const actualSpent = (selectedTeam.budget || 0) - actualRemaining;
+                  
+                  return (
+                    <>
+                      <div className="flex-1 backdrop-blur-sm rounded-lg px-3 py-2" style={{
+                        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)'
+                      }}>
+                        <p className="text-xs text-gray-400 uppercase tracking-wider">Total Players</p>
+                        <p className="text-2xl font-black" style={{ color: '#D4AF37' }}>{teamPlayers.length}</p>
+                      </div>
+                      <div className="flex-1 backdrop-blur-sm rounded-lg px-3 py-2" style={{
+                        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)'
+                      }}>
+                        <p className="text-xs text-gray-400 uppercase tracking-wider">Budget Spent</p>
+                        <p className="text-2xl font-black" style={{ color: '#D4AF37' }}>₹{(actualSpent / 1000).toFixed(1)}K</p>
+                      </div>
+                      <div className="flex-1 backdrop-blur-sm rounded-lg px-3 py-2" style={{
+                        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)'
+                      }}>
+                        <p className="text-xs text-gray-400 uppercase tracking-wider">Remaining</p>
+                        <p className="text-2xl font-black text-emerald-400">₹{(actualRemaining / 1000).toFixed(1)}K</p>
+                      </div>
+                      <div className="flex-1 backdrop-blur-sm rounded-lg px-3 py-2" style={{
+                        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)'
+                      }}>
+                        <p className="text-xs text-gray-400 uppercase tracking-wider">Slots</p>
+                        <p className="text-2xl font-black" style={{ color: '#D4AF37' }}>{selectedTeam.filledSlots || teamPlayers.length}/{selectedTeam.totalSlots}</p>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+
+            {/* Players Grid */}
+            <div className="overflow-y-auto p-6 custom-scrollbar" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+              {(() => {
+                // Use team.players array if available, otherwise filter from global players
+                const teamPlayers = selectedTeam.players && selectedTeam.players.length > 0
+                  ? selectedTeam.players
+                  : players.filter(p => 
+                      (p.team === selectedTeam._id || p.team === selectedTeam.name) && 
+                      p.status === 'sold'
+                    );
+                
+                console.log('Modal - Selected Team:', selectedTeam.name, selectedTeam._id);
+                console.log('Modal - Team.players array:', selectedTeam.players);
+                console.log('Modal - All Players:', players.length);
+                console.log('Modal - All Players with teams:', players.filter(p => p.team).map(p => ({ name: p.name, team: p.team, status: p.status })));
+                console.log('Modal - Team Players Found:', teamPlayers.length);
+                console.log('Modal - Team Players:', teamPlayers.map(p => ({ name: p.name, team: p.team, status: p.status })));
+                
+                if (teamPlayers.length === 0) {
+                  return (
+                    <div className="flex items-center justify-center py-20">
+                      <div className="text-center">
+                        <div className="text-6xl mb-4">�</div>
+                        <p className="text-xl font-bold text-gray-400">No Players Yet</p>
+                        <p className="text-sm text-gray-500 mt-2">This team hasn't purchased any players</p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {teamPlayers.map((player, index) => (
+                      <div
+                        key={player._id}
+                        className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
+                          border: '2px solid rgba(212, 175, 55, 0.3)',
+                          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.1)'
+                        }}
+                      >
+                        {/* Glow Effect on Hover */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-amber-500/5 to-amber-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        {/* Player Number Badge */}
+                        <div className="absolute top-3 left-3 z-10">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm" style={{
+                            background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 100%)',
+                            color: '#000',
+                            boxShadow: '0 4px 15px rgba(212, 175, 55, 0.4)'
+                          }}>
+                            {index + 1}
+                          </div>
+                        </div>
+
+                        {/* Position Badge */}
+                        <div className="absolute top-3 right-3 z-10">
+                          <div className="px-2 py-1 rounded-full text-xs font-bold backdrop-blur-sm" style={{
+                            background: player.position === 'Spiker' ? 'rgba(251, 191, 36, 0.9)' :
+                                       player.position === 'Setter' ? 'rgba(168, 85, 247, 0.9)' :
+                                       player.position === 'Libero' ? 'rgba(59, 130, 246, 0.9)' :
+                                       player.position === 'Blocker' ? 'rgba(239, 68, 68, 0.9)' :
+                                       'rgba(16, 185, 129, 0.9)',
+                            color: '#fff'
+                          }}>
+                            {player.position}
+                          </div>
+                        </div>
+
+                        <div className="relative p-4">
+                          {/* Player Icon */}
+                          <div className="text-4xl mb-3 text-center">
+                            {player.position === 'Spiker' ? '🏐' :
+                             player.position === 'Setter' ? '⭐' :
+                             player.position === 'Libero' ? '🛡️' :
+                             player.position === 'Blocker' ? '🔥' : '🏐'}
+                          </div>
+
+                          {/* Player Name */}
+                          <h3 className="text-lg font-black text-center mb-2 tracking-tight" style={{
+                            background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                          }}>
+                            {player.name}
+                          </h3>
+
+                          {/* Player Details */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center text-sm">
+                              <span className="text-gray-400">Class:</span>
+                              <span className="font-bold text-white">{player.class}</span>
+                            </div>
+                            
+                            <div className="flex justify-between items-center text-sm">
+                              <span className="text-gray-400">Reg No:</span>
+                              <span className="font-bold text-gray-300">{player.regNo}</span>
+                            </div>
+
+                            {/* Sold Amount - Highlighted */}
+                            <div className="mt-3 pt-3 border-t border-amber-500/30">
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs text-gray-400 uppercase tracking-wider">Sold For</span>
+                                <span className="text-xl font-black" style={{
+                                  background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent',
+                                  backgroundClip: 'text'
+                                }}>
+                                  ₹{(player.soldAmount! / 1000).toFixed(1)}K
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         </div>
       )}

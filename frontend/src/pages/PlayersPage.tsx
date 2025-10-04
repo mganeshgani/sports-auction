@@ -179,7 +179,7 @@ const PlayersPage: React.FC = () => {
               border: '2px solid rgba(212, 175, 55, 0.4)',
               boxShadow: '0 0 30px rgba(212, 175, 55, 0.3)'
             }}>
-              <span className="text-5xl">⚽</span>
+              <span className="text-5xl">🏐</span>
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">
               {filter === 'all' ? 'No Players Yet' : `No ${filter} Players`}
