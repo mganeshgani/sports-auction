@@ -25,24 +25,40 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
         boxShadow: '0 4px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.1)'
       }}>
-        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex justify-between h-20">
             {/* Logo Section */}
-            <div className="flex items-center">
+            <div className="flex items-center -ml-2">
               <div className="flex-shrink-0 flex items-center gap-3">
                 <div style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #FFD700 100%)',
-                  borderRadius: '50%',
+                  width: '64px',
+                  height: '64px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 0 30px rgba(212, 175, 55, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.3)',
-                  fontSize: '24px',
-                  animation: 'float 3s ease-in-out infinite'
+                  justifyContent: 'center'
                 }}>
-                  ⚡
+                  <img 
+                    src="/logo.png" 
+                    alt="College Logo" 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain'
+                    }}
+                    onError={(e) => {
+                      // Fallback to lightning emoji if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent && !parent.querySelector('.fallback-icon')) {
+                        const fallback = document.createElement('span');
+                        fallback.className = 'fallback-icon';
+                        fallback.textContent = '⚡';
+                        fallback.style.fontSize = '24px';
+                        parent.appendChild(fallback);
+                      }
+                    }}
+                  />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   <h1 style={{
@@ -68,7 +84,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     textTransform: 'uppercase',
                     opacity: 0.9
                   }}>
-                    St Aloysius College
+                    St Aloysius (Deemed To Be University)
                   </p>
                 </div>
               </div>

@@ -58,7 +58,11 @@ const PlayersPage: React.FC = () => {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Compact Header Section with Animation */}
-      <div className="relative flex-shrink-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 border-b border-gray-700/50 px-6 py-3 overflow-hidden">
+      <div className="relative flex-shrink-0 border-b px-6 py-3 overflow-hidden" style={{
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 17, 23, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.1)'
+      }}>
         {/* Mesmerizing Background Animation */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="aurora-bg-header"></div>
@@ -71,32 +75,40 @@ const PlayersPage: React.FC = () => {
         <div className="relative z-10 flex items-center justify-between gap-4">
           {/* Title & CSV Upload - Combined */}
           <div className="flex items-center gap-4 flex-1">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30">
-                <span className="text-2xl">⚽</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-black text-white">Players Management</h1>
-                <p className="text-gray-400 text-xs">Manage and track players</p>
-              </div>
+            <div>
+              <h1 className="text-3xl font-black tracking-tight" style={{
+                background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 40px rgba(212, 175, 55, 0.3)'
+              }}>Players Management</h1>
+              <p className="text-gray-400 text-sm font-medium tracking-wide">Manage and track players</p>
             </div>
             
             {/* Compact CSV Upload */}
-            <div className="flex-1 max-w-md">
+            <div className="flex-1 max-w-md ml-6">
               <CSVUpload onUploadSuccess={fetchPlayers} />
             </div>
           </div>
 
           {/* Stats Card */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-gray-700/50">
+          <div className="backdrop-blur-sm rounded-lg px-4 py-2" style={{
+            background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+            border: '1px solid rgba(212, 175, 55, 0.3)',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+          }}>
             <p className="text-xs text-gray-400">Total</p>
-            <p className="text-xl font-black text-white">{players.length}</p>
+            <p className="text-xl font-black" style={{ color: '#D4AF37' }}>{players.length}</p>
           </div>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex-shrink-0 px-6 py-3 bg-gray-900/50 border-b border-gray-700/30">
+      <div className="flex-shrink-0 px-6 py-3 border-b" style={{
+        background: 'rgba(0, 0, 0, 0.5)',
+        borderBottom: '1px solid rgba(212, 175, 55, 0.2)'
+      }}>
         <div className="flex gap-2">
           {(['all', 'available', 'sold', 'unsold'] as const).map((f) => {
             const count = f === 'all' ? players.length : players.filter(p => p.status === f).length;
@@ -104,18 +116,37 @@ const PlayersPage: React.FC = () => {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`group relative px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300 capitalize ${
-                  filter === f
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg scale-105'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800 hover:scale-105'
-                }`}
+                className="group relative px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300 capitalize"
+                style={filter === f ? {
+                  background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
+                  border: '2px solid rgba(212, 175, 55, 0.5)',
+                  boxShadow: '0 4px 15px rgba(212, 175, 55, 0.4)',
+                  color: '#000000',
+                  transform: 'scale(1.05)'
+                } : {
+                  color: '#9ca3af',
+                  background: 'transparent',
+                  border: '2px solid transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (filter !== f) {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (filter !== f) {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }
+                }}
               >
                 <span>{f}</span>
-                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs font-black ${
+                <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-black" style={
                   filter === f 
-                    ? 'bg-white/20' 
-                    : 'bg-gray-700 group-hover:bg-gray-600'
-                }`}>
+                    ? { background: 'rgba(0, 0, 0, 0.2)' }
+                    : { background: '#374151' }
+                }>
                   {count}
                 </span>
               </button>
@@ -129,7 +160,10 @@ const PlayersPage: React.FC = () => {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="relative">
-              <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-indigo-500 border-t-transparent"></div>
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-4" style={{
+                borderColor: 'transparent',
+                borderTopColor: '#D4AF37'
+              }}></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-2xl">⚽</span>
               </div>
@@ -140,7 +174,11 @@ const PlayersPage: React.FC = () => {
       ) : filteredPlayers.length === 0 ? (
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center max-w-md">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center" style={{
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(240, 215, 112, 0.2) 100%)',
+              border: '2px solid rgba(212, 175, 55, 0.4)',
+              boxShadow: '0 0 30px rgba(212, 175, 55, 0.3)'
+            }}>
               <span className="text-5xl">⚽</span>
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">
@@ -203,23 +241,23 @@ const PlayersPage: React.FC = () => {
                   {/* Player Details */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between bg-gray-900/50 rounded-lg px-3 py-2 border border-gray-700/30">
-                      <span className="text-xs text-gray-400 flex items-center gap-1">
-                        <span>🎓</span> Class
+                      <span className="text-xs text-gray-400 uppercase tracking-wider">
+                        Class
                       </span>
                       <span className="text-xs font-bold text-white truncate ml-2">{player.class}</span>
                     </div>
                     
                     <div className="flex items-center justify-between bg-gray-900/50 rounded-lg px-3 py-2 border border-gray-700/30">
-                      <span className="text-xs text-gray-400 flex items-center gap-1">
-                        <span>🎯</span> Position
+                      <span className="text-xs text-gray-400 uppercase tracking-wider">
+                        Position
                       </span>
                       <span className="text-xs font-bold text-white truncate ml-2">{player.position}</span>
                     </div>
 
                     {player.soldAmount && (
                       <div className="flex items-center justify-between bg-gradient-to-r from-green-600/10 to-emerald-600/10 rounded-lg px-3 py-2 border border-green-600/30">
-                        <span className="text-xs text-gray-400 flex items-center gap-1">
-                          <span>💰</span> Sold
+                        <span className="text-xs text-gray-400 uppercase tracking-wider">
+                          Sold
                         </span>
                         <span className="text-sm font-black text-green-400">₹{player.soldAmount.toLocaleString()}</span>
                       </div>

@@ -155,79 +155,113 @@ const ResultsPage: React.FC = () => {
 
   const getPositionIcon = (position: string) => {
     const icons: { [key: string]: string } = {
-      'Batsman': '🏏',
-      'Bowler': '⚡',
-      'All-Rounder': '⭐',
-      'Wicket-Keeper': '🧤',
+      'Batsman': 'BAT',
+      'Bowler': 'BWL',
+      'All-Rounder': 'AR',
+      'Wicket-Keeper': 'WK',
     };
-    return icons[position] || '🎯';
+    return icons[position] || 'POS';
   };
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 overflow-hidden">
-      {/* Compact Premium Header */}
-      <div className="flex-shrink-0 backdrop-blur-xl bg-slate-900/80 border-b border-white/10 shadow-xl">
-        <div className="px-4 sm:px-6 py-3 sm:py-4">
-          {/* Header Row - Compact */}
-          <div className="flex items-center justify-between gap-4 mb-3">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30">
-                  <span className="text-xl sm:text-2xl">🏆</span>
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                </div>
-              </div>
-              <div>
-                <h1 className="text-lg sm:text-2xl font-black bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                  Auction Results
-                </h1>
-                <p className="text-xs text-slate-400 hidden sm:flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                  Live Updates
-                </p>
+    <div className="h-full flex flex-col overflow-hidden" style={{
+      background: 'linear-gradient(160deg, #000000 0%, #0a0a0a 25%, #1a1a1a 50%, #0f172a 75%, #1a1a1a 100%)'
+    }}>
+      {/* Elegant Premium Horizontal Header */}
+      <div className="flex-shrink-0 backdrop-blur-xl border-b shadow-xl" style={{
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 17, 23, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.1)'
+      }}>
+        <div className="px-4 sm:px-6 py-3">
+          {/* Single Horizontal Row - Premium Layout */}
+          <div className="flex items-center gap-6">
+            {/* Left: Title with LIVE badge */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight whitespace-nowrap" style={{
+                background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 40px rgba(212, 175, 55, 0.3)'
+              }}>
+                Auction Results
+              </h1>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{
+                background: 'rgba(16, 185, 129, 0.15)',
+                border: '1px solid rgba(16, 185, 129, 0.4)',
+                boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)'
+              }}>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#10b981' }}></div>
+                <span className="text-xs font-bold text-emerald-400">LIVE</span>
               </div>
             </div>
 
-            {/* Export Button - Compact */}
+            {/* Center: Ultra-Premium Stats - Glass Morphism */}
+            {!loading && (
+              <div className="flex items-center gap-3 flex-1 justify-center">
+                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-white/30" style={{
+                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.6) 100%)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                }}>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Total</p>
+                  <p className="text-lg font-black text-white">{stats.total}</p>
+                </div>
+                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-emerald-400/50" style={{
+                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(16, 185, 129, 0.1) 100%)',
+                  border: '1px solid rgba(16, 185, 129, 0.4)',
+                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                }}>
+                  <p className="text-[10px] text-emerald-400/80 uppercase tracking-widest font-bold mb-0.5">Sold</p>
+                  <p className="text-lg font-black text-emerald-400">{stats.sold}</p>
+                </div>
+                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-rose-400/50" style={{
+                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(244, 63, 94, 0.1) 100%)',
+                  border: '1px solid rgba(244, 63, 94, 0.4)',
+                  boxShadow: '0 4px 15px rgba(244, 63, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                }}>
+                  <p className="text-[10px] text-rose-400/80 uppercase tracking-widest font-bold mb-0.5">Unsold</p>
+                  <p className="text-lg font-black text-rose-400">{stats.unsold}</p>
+                </div>
+                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-amber-400/50" style={{
+                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(212, 175, 55, 0.1) 100%)',
+                  border: '1px solid rgba(212, 175, 55, 0.4)',
+                  boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                }}>
+                  <p className="text-[10px] text-amber-400/80 uppercase tracking-widest font-bold mb-0.5">Spent</p>
+                  <p className="text-lg font-black" style={{
+                    background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>
+                    ₹{(stats.totalSpent / 1000).toFixed(0)}K
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Right: Export Button */}
             <CSVLink
               data={csvData}
               headers={csvHeaders}
               filename={`auction_results_${new Date().toISOString().split('T')[0]}.csv`}
-              className="group relative overflow-hidden px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-lg text-white text-sm font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/30 flex items-center gap-2"
+              className="group relative overflow-hidden px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center gap-2 flex-shrink-0"
+              style={{
+                background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
+                border: '2px solid rgba(212, 175, 55, 0.6)',
+                boxShadow: '0 4px 25px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+                color: '#000000'
+              }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform -skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
               <svg className="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <span className="relative z-10 hidden sm:inline">Export</span>
             </CSVLink>
           </div>
-
-          {/* Compact Stats Row */}
-          {!loading && (
-            <div className="grid grid-cols-4 gap-2 sm:gap-3">
-              <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2 sm:p-3 border border-white/10 hover:border-blue-500/50 transition-all">
-                <p className="text-xs text-slate-400 mb-0.5">Total</p>
-                <p className="text-lg sm:text-xl font-black text-white">{stats.total}</p>
-              </div>
-              <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2 sm:p-3 border border-white/10 hover:border-emerald-500/50 transition-all">
-                <p className="text-xs text-slate-400 mb-0.5">Sold</p>
-                <p className="text-lg sm:text-xl font-black text-emerald-400">{stats.sold}</p>
-              </div>
-              <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2 sm:p-3 border border-white/10 hover:border-rose-500/50 transition-all">
-                <p className="text-xs text-slate-400 mb-0.5">Unsold</p>
-                <p className="text-lg sm:text-xl font-black text-rose-400">{stats.unsold}</p>
-              </div>
-              <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2 sm:p-3 border border-white/10 hover:border-amber-500/50 transition-all">
-                <p className="text-xs text-slate-400 mb-0.5">Spent</p>
-                <p className="text-lg sm:text-xl font-black bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
-                  ₹{(stats.totalSpent / 1000).toFixed(0)}K
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
@@ -238,9 +272,6 @@ const ResultsPage: React.FC = () => {
           <div className="text-center">
             <div className="relative inline-block">
               <div className="w-16 h-16 rounded-full border-4 border-amber-500 border-t-transparent animate-spin"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-3xl">🏆</span>
-              </div>
             </div>
             <p className="mt-4 text-slate-400 font-semibold">Loading Results...</p>
           </div>
@@ -294,50 +325,50 @@ const ResultsPage: React.FC = () => {
               return (
                 <div
                   key={`${team._id}-${actualFilledSlots}-${actualSpent}-${actualRemaining}`}
-                  className={`group flex-shrink-0 w-80 sm:w-96 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-2xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10`}
-                  style={{ maxHeight: 'calc(100vh - 200px)' }}
+                  className={`group flex-shrink-0 w-72 sm:w-80 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10`}
+                  style={{ maxHeight: 'calc(100vh - 180px)' }}
                 >
                   {/* Animated Background */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
-                  {/* Card Content - Compact */}
-                  <div className="relative z-10 p-4 flex flex-col h-full">
+                  {/* Card Content - Ultra Compact */}
+                  <div className="relative z-10 p-3 flex flex-col h-full">
                     {/* Compact Team Header */}
-                    <div className="flex items-center justify-between mb-3 pb-3 border-b border-white/10">
-                      <div className="flex items-center gap-3">
-                        <div className="relative">
-                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradientClass} flex items-center justify-center border ${borderClass} shadow-lg`}>
-                            <span className="text-2xl">🏅</span>
-                          </div>
-                          <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-xs font-black text-white shadow-lg">
+                    <div className="flex items-center justify-between mb-2 pb-2 border-b border-white/10">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-xl font-black tracking-tight" style={{
+                            background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                          }}>{team.name}</h2>
+                          <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-lg">
                             {index + 1}
                           </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h2 className="text-xl font-black text-white truncate">{team.name}</h2>
-                          <div className="flex items-center gap-2 text-xs mt-1">
-                            <span className="bg-slate-800/60 px-2 py-0.5 rounded text-slate-300">
-                              👥 {actualFilledSlots}/{team.totalSlots}
-                            </span>
-                            <span className="bg-slate-800/60 px-2 py-0.5 rounded text-slate-300">
-                              {budgetUsedPercentage}%
-                            </span>
-                          </div>
+                        <div className="flex items-center gap-1.5 text-[10px] mt-1">
+                          <span className="bg-slate-800/60 px-1.5 py-0.5 rounded text-slate-300 font-semibold">
+                            {actualFilledSlots}/{team.totalSlots}
+                          </span>
+                          <span className="bg-slate-800/60 px-1.5 py-0.5 rounded text-slate-300 font-semibold">
+                            {budgetUsedPercentage}%
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     {/* Compact Budget Info */}
-                    <div className="grid grid-cols-2 gap-2 mb-3">
-                      <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2">
-                        <p className="text-xs text-slate-400">Spent</p>
-                        <p className="text-base font-black bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
+                    <div className="grid grid-cols-2 gap-1.5 mb-2">
+                      <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-1.5">
+                        <p className="text-[10px] text-slate-400">Spent</p>
+                        <p className="text-sm font-black bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
                           ₹{(actualSpent / 1000).toFixed(1)}K
                         </p>
                       </div>
-                      <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-2">
-                        <p className="text-xs text-slate-400">Left</p>
-                        <p className={`text-base font-black ${
+                      <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg p-1.5">
+                        <p className="text-[10px] text-slate-400">Left</p>
+                        <p className={`text-sm font-black ${
                           actualRemaining >= (team.budget || 0) * 0.3 ? 'text-emerald-400' : 
                           actualRemaining >= (team.budget || 0) * 0.1 ? 'text-amber-400' : 
                           'text-rose-400'
@@ -348,8 +379,8 @@ const ResultsPage: React.FC = () => {
                     </div>
 
                     {/* Compact Progress Bar */}
-                    <div className="mb-3">
-                      <div className="h-2 bg-slate-800/60 rounded-full overflow-hidden">
+                    <div className="mb-2">
+                      <div className="h-1.5 bg-slate-800/60 rounded-full overflow-hidden">
                         <div 
                           className={`h-full rounded-full transition-all duration-1000 ${
                             parseFloat(budgetUsedPercentage) >= 90 ? 'bg-gradient-to-r from-rose-500 to-red-600' :
@@ -363,11 +394,11 @@ const ResultsPage: React.FC = () => {
                     
                     {/* Players List - Scrollable Compact */}
                     {teamPlayers.length > 0 ? (
-                      <div className="flex-1 overflow-y-auto custom-scrollbar space-y-2">
+                      <div className="flex-1 overflow-y-auto custom-scrollbar space-y-1.5">
                         {teamPlayers.map((player) => (
                           <div
                             key={player._id}
-                            className={`group/player relative overflow-hidden bg-gradient-to-br ${getPositionColor(player.position)} backdrop-blur-sm rounded-lg p-3 border ${
+                            className={`group/player relative overflow-hidden bg-gradient-to-br ${getPositionColor(player.position)} backdrop-blur-sm rounded-lg p-2 border ${
                               player.position === 'Batsman' ? 'border-amber-500/40' : 
                               player.position === 'Bowler' ? 'border-blue-500/40' : 
                               player.position === 'All-Rounder' ? 'border-purple-500/40' : 
@@ -378,15 +409,15 @@ const ResultsPage: React.FC = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/player:translate-x-full transition-transform duration-1000"></div>
                             
                             <div className="relative z-10 flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-2 flex-1 min-w-0">
-                                <span className="text-xl">{getPositionIcon(player.position)}</span>
+                              <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                                <span className="text-lg">{getPositionIcon(player.position)}</span>
                                 <div className="flex-1 min-w-0">
-                                  <p className="font-bold text-white text-sm truncate">{player.name}</p>
-                                  <p className="text-xs text-slate-300">{player.position} • {player.class}</p>
+                                  <p className="font-bold text-white text-xs truncate">{player.name}</p>
+                                  <p className="text-[10px] text-slate-300">{player.position} • {player.class}</p>
                                 </div>
                               </div>
-                              <div className="flex-shrink-0 bg-slate-900/60 backdrop-blur-sm rounded px-2 py-1">
-                                <p className="text-xs font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                              <div className="flex-shrink-0 bg-slate-900/60 backdrop-blur-sm rounded px-1.5 py-0.5">
+                                <p className="text-[10px] font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                                   ₹{(player.soldAmount! / 1000).toFixed(0)}K
                                 </p>
                               </div>
@@ -395,10 +426,9 @@ const ResultsPage: React.FC = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="flex-1 flex items-center justify-center bg-slate-900/30 rounded-xl border border-slate-700/30">
-                        <div className="text-center py-6">
-                          <span className="text-3xl block mb-2">📭</span>
-                          <p className="text-slate-400 text-sm font-semibold">No Players</p>
+                      <div className="flex-1 flex items-center justify-center bg-slate-900/30 rounded-lg border border-slate-700/30">
+                        <div className="text-center py-4">
+                          <p className="text-slate-400 text-xs font-semibold">No Players</p>
                         </div>
                       </div>
                     )}

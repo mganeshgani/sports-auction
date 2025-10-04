@@ -16,12 +16,22 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, onEdit, onDelete }) => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      className="bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+      className="rounded-lg overflow-hidden shadow-lg"
+      style={{
+        background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(26, 31, 46, 0.9) 100%)' as any,
+        border: '2px solid rgba(212, 175, 55, 0.3)' as any,
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.1)' as any
+      }}
     >
       {/* Header */}
-      <div className="p-4 bg-gray-700">
+      <div className="p-4" style={{
+        background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%)',
+        borderBottom: '1px solid rgba(212, 175, 55, 0.3)'
+      }}>
         <div className="flex justify-between items-start">
-          <h3 className="text-xl font-bold text-white truncate">{team.name}</h3>
+          <h3 className="text-xl font-bold text-white truncate" style={{
+            textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)'
+          }}>{team.name}</h3>
           <div className="flex space-x-2">
             <Button
               size="sm"
@@ -46,15 +56,21 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, onEdit, onDelete }) => {
       <div className="p-4 space-y-4">
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gray-700/50 p-3 rounded-lg">
+          <div className="p-3 rounded-lg" style={{
+            background: 'rgba(0, 0, 0, 0.5)',
+            border: '1px solid rgba(212, 175, 55, 0.2)'
+          }}>
             <div className="text-gray-400 text-sm">Players</div>
-            <div className="text-xl font-bold text-white">
+            <div className="text-xl font-bold" style={{ color: '#D4AF37' }}>
               {team.filledSlots} / {team.totalSlots}
             </div>
           </div>
-          <div className="bg-gray-700/50 p-3 rounded-lg">
+          <div className="p-3 rounded-lg" style={{
+            background: 'rgba(0, 0, 0, 0.5)',
+            border: '1px solid rgba(212, 175, 55, 0.2)'
+          }}>
             <div className="text-gray-400 text-sm">Slots Left</div>
-            <div className="text-xl font-bold text-white">
+            <div className="text-xl font-bold" style={{ color: '#D4AF37' }}>
               {team.totalSlots - team.filledSlots}
             </div>
           </div>
@@ -71,17 +87,22 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, onEdit, onDelete }) => {
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-400">Remaining:</span>
-              <span className={`font-medium ${
-                (team.remainingBudget || 0) > 0 ? 'text-green-400' : 'text-red-400'
-              }`}>
+              <span className="font-medium" style={{
+                color: (team.remainingBudget || 0) > 0 ? '#10b981' : '#ef4444'
+              }}>
                 ₹{(team.remainingBudget || 0).toLocaleString()}
               </span>
             </div>
             
             {/* Budget Progress Bar */}
-            <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+            <div className="h-2 rounded-full overflow-hidden" style={{
+              background: 'rgba(0, 0, 0, 0.5)'
+            }}>
               <motion.div
-                className="h-full bg-indigo-500"
+                className="h-full"
+                style={{
+                  background: 'linear-gradient(to right, #D4AF37, #F0D770)'
+                }}
                 initial={{ width: 0 }}
                 animate={{
                   width: `${((team.budget - (team.remainingBudget || 0)) / team.budget) * 100}%`

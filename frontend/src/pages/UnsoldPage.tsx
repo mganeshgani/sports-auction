@@ -90,18 +90,27 @@ const UnsoldPage: React.FC = () => {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Compact Header Section */}
-      <div className="flex-shrink-0 bg-gradient-to-r from-red-600/20 via-orange-600/20 to-yellow-600/20 border-b border-gray-700/50 px-6 py-3">
+      <div className="flex-shrink-0 border-b px-6 py-3" style={{
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 17, 23, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.1)'
+      }}>
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center border border-red-500/30">
-              <span className="text-2xl">🚫</span>
-            </div>
-            <div>
-              <h1 className="text-2xl font-black text-white">Unsold Players</h1>
-              <p className="text-gray-400 text-xs">Players not sold in auction</p>
-            </div>
+          <div>
+            <h1 className="text-3xl font-black tracking-tight" style={{
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #fca5a5 50%, #dc2626 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 40px rgba(220, 38, 38, 0.3)'
+            }}>Unsold Players</h1>
+            <p className="text-gray-400 text-sm font-medium tracking-wide">Players not sold in auction</p>
           </div>
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-gray-700/50">
+          <div className="backdrop-blur-sm rounded-lg px-4 py-2" style={{
+            background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+            border: '1px solid rgba(220, 38, 38, 0.3)',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+          }}>
             <p className="text-xs text-gray-400">Total Unsold</p>
             <p className="text-xl font-black text-red-400">{unsoldPlayers.length}</p>
           </div>
@@ -113,7 +122,10 @@ const UnsoldPage: React.FC = () => {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="relative">
-              <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-red-500 border-t-transparent"></div>
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-4" style={{
+                borderColor: 'transparent',
+                borderTopColor: '#dc2626'
+              }}></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-2xl">🚫</span>
               </div>
@@ -178,15 +190,15 @@ const UnsoldPage: React.FC = () => {
                 {/* Player Details */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between bg-gray-900/50 rounded-lg px-3 py-2 border border-gray-700/30">
-                    <span className="text-xs text-gray-400 flex items-center gap-1">
-                      <span>🎓</span> Class
+                    <span className="text-xs text-gray-400 uppercase tracking-wider">
+                      Class
                     </span>
                     <span className="text-xs font-bold text-white truncate ml-2">{player.class}</span>
                   </div>
                   
                   <div className="flex items-center justify-between bg-gray-900/50 rounded-lg px-3 py-2 border border-gray-700/30">
-                    <span className="text-xs text-gray-400 flex items-center gap-1">
-                      <span>🎯</span> Position
+                    <span className="text-xs text-gray-400 uppercase tracking-wider">
+                      Position
                     </span>
                     <span className="text-xs font-bold text-white truncate ml-2">{player.position}</span>
                   </div>
@@ -196,7 +208,6 @@ const UnsoldPage: React.FC = () => {
                     onClick={() => handleAuctionClick(player)}
                     className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 rounded-lg text-sm font-bold transition-all duration-300 hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                   >
-                    <span>🔨</span>
                     <span>Auction Now</span>
                   </button>
                 </div>

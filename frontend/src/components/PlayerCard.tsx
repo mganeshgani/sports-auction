@@ -15,7 +15,12 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
 }) => {
   return (
     <motion.div
-      className="relative bg-gray-800 rounded-xl overflow-hidden shadow-xl"
+      className="relative rounded-xl overflow-hidden shadow-xl"
+      style={{
+        background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(26, 31, 46, 0.9) 100%)' as any,
+        border: '2px solid rgba(212, 175, 55, 0.3)' as any,
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.1)' as any
+      }}
       initial={isRevealing ? { scale: 0.8, opacity: 0 } : undefined}
       animate={isRevealing ? { scale: 1, opacity: 1 } : undefined}
       transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -68,17 +73,19 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
         </div>
 
         {player.status === 'sold' && (
-          <div className="mt-2 pt-2 border-t border-gray-700">
+          <div className="mt-2 pt-2" style={{
+            borderTop: '1px solid rgba(212, 175, 55, 0.3)'
+          }}>
             <div className="flex justify-between items-center">
               <span className="text-gray-500">Sold to:</span>
-              <span className="font-medium text-indigo-400">
+              <span className="font-medium" style={{ color: '#D4AF37' }}>
                 {(player as any).team?.name || 'Unknown Team'}
               </span>
             </div>
             {player.soldAmount > 0 && (
               <div className="flex justify-between items-center mt-1">
                 <span className="text-gray-500">Amount:</span>
-                <span className="font-bold text-green-400">
+                <span className="font-bold" style={{ color: '#F0D770' }}>
                   ₹{player.soldAmount.toLocaleString()}
                 </span>
               </div>

@@ -117,42 +117,57 @@ const TeamsPage: React.FC = () => {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Compact Header Section */}
-      <div className="flex-shrink-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 border-b border-gray-700/50 px-6 py-3">
+      <div className="flex-shrink-0" style={{
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 17, 23, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.1)',
+        padding: '0.75rem 1.5rem'
+      }}>
         <div className="flex items-center justify-between gap-4">
           {/* Title & Stats - Combined */}
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30">
-                <span className="text-2xl">🏆</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-black text-white">Team Management</h1>
-                <p className="text-gray-400 text-xs">Manage auction teams</p>
-              </div>
+            <div>
+              <h1 className="text-3xl font-black tracking-tight" style={{
+                background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 40px rgba(212, 175, 55, 0.3)'
+              }}>Team Management</h1>
+              <p className="text-gray-400 text-sm font-medium tracking-wide">Manage auction teams</p>
             </div>
 
             {/* Inline Stats */}
             {!loading && teams.length > 0 && (
               <div className="flex items-center gap-3 ml-4">
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-gray-700/50 flex items-center gap-2">
-                  <span className="text-lg">👥</span>
+                <div className="backdrop-blur-sm rounded-lg px-3 py-2" style={{
+                  background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+                }}>
                   <div>
-                    <p className="text-xs text-gray-400">Teams</p>
-                    <p className="text-lg font-black text-white">{teams.length}</p>
+                    <p className="text-xs text-gray-400 uppercase tracking-wider">Teams</p>
+                    <p className="text-lg font-black" style={{ color: '#D4AF37' }}>{teams.length}</p>
                   </div>
                 </div>
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-gray-700/50 flex items-center gap-2">
-                  <span className="text-lg">💰</span>
+                <div className="backdrop-blur-sm rounded-lg px-3 py-2" style={{
+                  background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+                }}>
                   <div>
-                    <p className="text-xs text-gray-400">Budget</p>
-                    <p className="text-lg font-black text-white">₹{(teams.reduce((sum, t) => sum + (t.budget || 0), 0) / 1000).toFixed(0)}K</p>
+                    <p className="text-xs text-gray-400 uppercase tracking-wider">Budget</p>
+                    <p className="text-lg font-black" style={{ color: '#D4AF37' }}>₹{(teams.reduce((sum, t) => sum + (t.budget || 0), 0) / 1000).toFixed(0)}K</p>
                   </div>
                 </div>
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-gray-700/50 flex items-center gap-2">
-                  <span className="text-lg">⚡</span>
+                <div className="backdrop-blur-sm rounded-lg px-3 py-2" style={{
+                  background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
+                }}>
                   <div>
-                    <p className="text-xs text-gray-400">Players</p>
-                    <p className="text-lg font-black text-white">{teams.reduce((sum, t) => sum + (t.filledSlots || 0), 0)}</p>
+                    <p className="text-xs text-gray-400 uppercase tracking-wider">Players</p>
+                    <p className="text-lg font-black" style={{ color: '#D4AF37' }}>{teams.reduce((sum, t) => sum + (t.filledSlots || 0), 0)}</p>
                   </div>
                 </div>
               </div>
@@ -162,7 +177,13 @@ const TeamsPage: React.FC = () => {
           {/* Add Team Button */}
           <button
             onClick={() => setShowAddModal(true)}
-            className="group px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-lg font-bold text-sm transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-indigo-500/50 flex items-center gap-2"
+            className="group px-5 py-2 rounded-lg font-bold text-sm transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2"
+            style={{
+              background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
+              border: '2px solid rgba(212, 175, 55, 0.5)',
+              boxShadow: '0 4px 20px rgba(212, 175, 55, 0.4)',
+              color: '#000000'
+            }}
           >
             <span className="text-xl group-hover:rotate-90 transition-transform duration-300">+</span>
             <span>Add Team</span>
@@ -186,7 +207,10 @@ const TeamsPage: React.FC = () => {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="relative">
-              <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-indigo-500 border-t-transparent"></div>
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-4" style={{
+                borderColor: 'transparent',
+                borderTopColor: '#D4AF37'
+              }}></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-2xl">🏆</span>
               </div>
@@ -197,14 +221,24 @@ const TeamsPage: React.FC = () => {
       ) : teams.length === 0 ? (
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center max-w-md">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center" style={{
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(240, 215, 112, 0.2) 100%)',
+              border: '2px solid rgba(212, 175, 55, 0.4)',
+              boxShadow: '0 0 30px rgba(212, 175, 55, 0.3)'
+            }}>
               <span className="text-5xl">🏆</span>
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">No Teams Yet</h3>
             <p className="text-gray-400 mb-6">Get started by creating your first team!</p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+              className="px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+              style={{
+                background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
+                border: '2px solid rgba(212, 175, 55, 0.5)',
+                boxShadow: '0 4px 20px rgba(212, 175, 55, 0.4)',
+                color: '#000000'
+              }}
             >
               + Create First Team
             </button>
@@ -220,18 +254,24 @@ const TeamsPage: React.FC = () => {
               return (
                 <div
                   key={team._id}
-                  className="group relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-5 shadow-lg border border-gray-700/50 hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 hover:scale-[1.02]"
+                  className="group relative rounded-2xl p-5 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(26, 31, 46, 0.9) 100%)',
+                    border: '2px solid rgba(212, 175, 55, 0.3)',
+                    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.1)'
+                  }}
                 >
                   {/* Team Header */}
                   <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30 group-hover:scale-110 transition-transform">
-                        <span className="text-2xl">🏅</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black text-white group-hover:text-indigo-400 transition-colors">{team.name}</h3>
-                        <p className="text-xs text-gray-500">Team ID: {team._id.slice(-6)}</p>
-                      </div>
+                    <div>
+                      <h3 className="text-2xl font-black tracking-tight" style={{
+                        background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)'
+                      }}>{team.name}</h3>
+                      <p className="text-xs text-gray-500 font-medium mt-1">Team ID: {team._id.slice(-6)}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
@@ -258,60 +298,74 @@ const TeamsPage: React.FC = () => {
                   {/* Stats Grid */}
                   <div className="space-y-4">
                     {/* Budget Section */}
-                    <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700/30">
+                    <div className="rounded-xl p-4" style={{
+                      background: 'rgba(0, 0, 0, 0.5)',
+                      border: '1px solid rgba(212, 175, 55, 0.2)'
+                    }}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wide flex items-center gap-1">
-                          <span>💰</span> Budget
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                          Budget
                         </span>
-                        <span className="text-sm font-black text-green-400">₹{(team.budget || 0).toLocaleString()}</span>
+                        <span className="text-sm font-black" style={{ color: '#D4AF37' }}>₹{(team.budget || 0).toLocaleString()}</span>
                       </div>
-                      <div className="h-2 bg-gray-800 rounded-full overflow-hidden mb-2">
+                      <div className="h-2 rounded-full overflow-hidden mb-2" style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
                         <div
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            budgetPercentage > 60
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-500'
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${budgetPercentage}%`,
+                            background: budgetPercentage > 60
+                              ? 'linear-gradient(to right, #10b981, #059669)'
                               : budgetPercentage > 30
-                              ? 'bg-gradient-to-r from-yellow-500 to-amber-500'
-                              : 'bg-gradient-to-r from-red-500 to-rose-500'
-                          }`}
-                          style={{ width: `${budgetPercentage}%` }}
+                              ? 'linear-gradient(to right, #D4AF37, #F0D770)'
+                              : 'linear-gradient(to right, #dc2626, #b91c1c)'
+                          }}
                         ></div>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-500">Remaining</span>
-                        <span className="text-sm font-bold text-yellow-400">₹{(team.remainingBudget || 0).toLocaleString()}</span>
+                        <span className="text-sm font-bold" style={{ color: '#F0D770' }}>₹{(team.remainingBudget || 0).toLocaleString()}</span>
                       </div>
                     </div>
 
                     {/* Players/Slots Section */}
-                    <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700/30">
+                    <div className="rounded-xl p-4" style={{
+                      background: 'rgba(0, 0, 0, 0.5)',
+                      border: '1px solid rgba(212, 175, 55, 0.2)'
+                    }}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wide flex items-center gap-1">
-                          <span>👥</span> Players
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                          Players
                         </span>
-                        <span className="text-sm font-black text-blue-400">{team.filledSlots || 0} / {team.totalSlots}</span>
+                        <span className="text-sm font-black" style={{ color: '#D4AF37' }}>{team.filledSlots || 0} / {team.totalSlots}</span>
                       </div>
-                      <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                      <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
                         <div
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            slotsPercentage < 50
-                              ? 'bg-gradient-to-r from-blue-500 to-cyan-500'
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${slotsPercentage}%`,
+                            background: slotsPercentage < 50
+                              ? 'linear-gradient(to right, #D4AF37, #F0D770)'
                               : slotsPercentage < 80
-                              ? 'bg-gradient-to-r from-purple-500 to-pink-500'
-                              : 'bg-gradient-to-r from-green-500 to-emerald-500'
-                          }`}
-                          style={{ width: `${slotsPercentage}%` }}
+                              ? 'linear-gradient(to right, #C9A661, #D4AF37)'
+                              : 'linear-gradient(to right, #10b981, #059669)'
+                          }}
                         ></div>
                       </div>
                     </div>
 
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="bg-gradient-to-br from-indigo-600/10 to-purple-600/10 rounded-lg p-3 border border-indigo-600/20">
+                      <div className="rounded-lg p-3" style={{
+                        background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(240, 215, 112, 0.1) 100%)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)'
+                      }}>
                         <p className="text-xs text-gray-400 mb-1">Spent</p>
                         <p className="text-lg font-black text-white">₹{((team.budget || 0) - (team.remainingBudget || 0)).toLocaleString()}</p>
                       </div>
-                      <div className="bg-gradient-to-br from-green-600/10 to-emerald-600/10 rounded-lg p-3 border border-green-600/20">
+                      <div className="rounded-lg p-3" style={{
+                        background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(240, 215, 112, 0.1) 100%)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)'
+                      }}>
                         <p className="text-xs text-gray-400 mb-1">Slots Left</p>
                         <p className="text-lg font-black text-white">{team.totalSlots - (team.filledSlots || 0)}</p>
                       </div>
@@ -335,14 +389,26 @@ const TeamsPage: React.FC = () => {
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
             <div
-              className="relative w-full max-w-lg bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700/50 overflow-hidden pointer-events-auto animate-slideUp"
+              className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden pointer-events-auto animate-slideUp"
               onClick={(e) => e.stopPropagation()}
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 17, 23, 0.95) 50%, rgba(0, 0, 0, 0.95) 100%)',
+                border: '2px solid rgba(212, 175, 55, 0.3)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.9), 0 0 80px rgba(212, 175, 55, 0.2)'
+              }}
             >
               {/* Modal Header */}
-              <div className="relative bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 border-b border-gray-700/50 p-6">
+              <div className="relative border-b p-6" style={{
+                background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%)',
+                borderBottom: '1px solid rgba(212, 175, 55, 0.3)'
+              }}>
                 <button
                   onClick={resetForm}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-800/80 hover:bg-gray-700 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-90 group"
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-90 group"
+                  style={{
+                    background: 'rgba(0, 0, 0, 0.8)',
+                    border: '1px solid rgba(212, 175, 55, 0.3)'
+                  }}
                 >
                   <svg className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -350,7 +416,11 @@ const TeamsPage: React.FC = () => {
                 </button>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center border border-indigo-500/30">
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{
+                    background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
+                    border: '2px solid rgba(212, 175, 55, 0.5)',
+                    boxShadow: '0 0 20px rgba(212, 175, 55, 0.4), inset 0 2px 8px rgba(255, 255, 255, 0.3)'
+                  }}>
                     <span className="text-3xl">{editingTeam ? '✏️' : '➕'}</span>
                   </div>
                   <div>
@@ -364,8 +434,7 @@ const TeamsPage: React.FC = () => {
               <form onSubmit={handleSubmit} className="p-6 space-y-5">
                 {/* Team Name Input */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">
-                    <span className="text-lg">🏅</span>
+                  <label className="block text-sm font-bold text-gray-300 mb-2">
                     Team Name
                   </label>
                   <input
@@ -374,7 +443,12 @@ const TeamsPage: React.FC = () => {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Enter team name..."
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 outline-none"
+                    className="w-full px-4 py-3 bg-gray-800/80 border rounded-xl text-white placeholder-gray-500 transition-all duration-300 outline-none"
+                    style={{
+                      borderColor: 'rgba(212, 175, 55, 0.3)'
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = '#D4AF37'}
+                    onBlur={(e) => e.target.style.borderColor = 'rgba(212, 175, 55, 0.3)'}
                   />
                 </div>
 
@@ -382,8 +456,7 @@ const TeamsPage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   {/* Total Slots Input */}
                   <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">
-                      <span className="text-lg">👥</span>
+                    <label className="block text-sm font-bold text-gray-300 mb-2">
                       Total Slots
                     </label>
                     <input
@@ -392,14 +465,18 @@ const TeamsPage: React.FC = () => {
                       min="1"
                       value={formData.totalSlots}
                       onChange={(e) => setFormData({ ...formData, totalSlots: parseInt(e.target.value) || 0 })}
-                      className="w-full px-4 py-3 bg-gray-800/80 border border-gray-700 rounded-xl text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 outline-none"
+                      className="w-full px-4 py-3 bg-gray-800/80 border rounded-xl text-white transition-all duration-300 outline-none"
+                      style={{
+                        borderColor: 'rgba(212, 175, 55, 0.3)'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#D4AF37'}
+                      onBlur={(e) => e.target.style.borderColor = 'rgba(212, 175, 55, 0.3)'}
                     />
                   </div>
 
                   {/* Budget Input */}
                   <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">
-                      <span className="text-lg">💰</span>
+                    <label className="block text-sm font-bold text-gray-300 mb-2">
                       Budget (₹)
                     </label>
                     <input
@@ -408,13 +485,21 @@ const TeamsPage: React.FC = () => {
                       min="0"
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: parseInt(e.target.value) || 0 })}
-                      className="w-full px-4 py-3 bg-gray-800/80 border border-gray-700 rounded-xl text-white focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300 outline-none"
+                      className="w-full px-4 py-3 bg-gray-800/80 border rounded-xl text-white transition-all duration-300 outline-none"
+                      style={{
+                        borderColor: 'rgba(212, 175, 55, 0.3)'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#D4AF37'}
+                      onBlur={(e) => e.target.style.borderColor = 'rgba(212, 175, 55, 0.3)'}
                     />
                   </div>
                 </div>
 
                 {/* Info Box */}
-                <div className="bg-indigo-600/10 border border-indigo-600/30 rounded-xl p-4">
+                <div className="rounded-xl p-4" style={{
+                  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)'
+                }}>
                   <div className="flex gap-3">
                     <span className="text-2xl flex-shrink-0">💡</span>
                     <div className="text-sm text-gray-300">
@@ -433,13 +518,24 @@ const TeamsPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="flex-1 px-4 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-bold transition-all duration-300 hover:scale-105 border border-gray-700"
+                    className="flex-1 px-4 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105"
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.5)',
+                      border: '1px solid rgba(212, 175, 55, 0.3)',
+                      color: 'white'
+                    }}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-indigo-500/50"
+                    className="flex-1 px-4 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
+                      border: '2px solid rgba(212, 175, 55, 0.5)',
+                      boxShadow: '0 4px 20px rgba(212, 175, 55, 0.4)',
+                      color: '#000000'
+                    }}
                   >
                     {editingTeam ? '✓ Update Team' : '✓ Create Team'}
                   </button>
