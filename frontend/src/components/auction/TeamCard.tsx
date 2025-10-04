@@ -47,14 +47,14 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, compact = false }) => {
         {/* Premium Black Card */}
         <div style={{
           position: 'relative',
-          background: 'linear-gradient(135deg, rgba(26, 26, 31, 0.95), rgba(26, 26, 31, 0.85))',
+          background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
           backdropFilter: 'blur(20px)',
           borderRadius: '10px',
           padding: '8px',
-          border: '1px solid rgba(176, 139, 79, 0.25)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(176, 139, 79, 0.1)',
+          border: '1px solid rgba(212, 175, 55, 0.25)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.1)',
           transition: 'all 300ms'
-        }} className="hover:border-[rgba(176,139,79,0.4)]">
+        }} className="hover:border-[rgba(212,175,55,0.4)]">
           {/* Team Name with Gold Icon */}
           <div className="flex items-center gap-1.5 mb-1.5">
             <div style={{

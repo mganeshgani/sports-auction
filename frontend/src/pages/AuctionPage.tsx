@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Player, Team } from '../types';
 import SpinWheel from '../components/auction/SpinWheel';
@@ -191,7 +191,10 @@ const AuctionPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col px-4 py-3">
+    <div className="h-full flex flex-col px-4 py-3" style={{
+      background: 'linear-gradient(160deg, #000000 0%, #0a0a0a 25%, #1a1a1a 50%, #0f172a 75%, #1a1a1a 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
       {/* Compact Header */}
       <div className="flex justify-between items-center mb-3 flex-shrink-0">
         <h1 className="text-2xl font-bold">Live Auction</h1>
@@ -200,13 +203,21 @@ const AuctionPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 flex-1 overflow-hidden min-h-0">
         {/* Team Dashboard - Compact Sidebar */}
         <div className="lg:col-span-1 space-y-1.5 overflow-y-auto custom-scrollbar pr-2 min-h-0">
-          <h2 className="text-xl font-black mb-1.5 flex items-center gap-2 sticky top-0 py-1.5 z-10" style={{
-            color: '#F5F5F5',
-            backgroundColor: '#0E0E12'
+          <div className="sticky top-0 py-2 z-10 backdrop-blur-sm" style={{
+            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 10, 10, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+            borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
+            boxShadow: '0 2px 10px rgba(212, 175, 55, 0.1)'
           }}>
-            <span className="text-2xl">🏆</span>
-            Teams
-          </h2>
+            <h2 className="text-2xl font-black tracking-tight text-center" style={{
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              filter: 'drop-shadow(0 0 20px rgba(212, 175, 55, 0.4))'
+            }}>
+              TEAMS
+            </h2>
+          </div>
           {teams.map((team) => (
             <TeamCard key={team._id} team={team} compact={true} />
           ))}
@@ -216,20 +227,66 @@ const AuctionPage: React.FC = () => {
         <div className="lg:col-span-3 flex flex-col h-full">
           {!showPlayer && !isSpinning && (
             <div className="backdrop-blur-sm rounded-lg flex items-center justify-center flex-1 min-h-0" style={{
-              backgroundColor: 'rgba(26, 26, 31, 0.6)',
-              border: '1px solid #2C2C32'
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
+              border: '1px solid rgba(212, 175, 55, 0.2)'
             }}>
               <div className="text-center max-w-md">
-                {/* Premium Gold Icon */}
+                {/* Premium Golden Wings Badge */}
                 <div className="relative inline-block mb-6">
-                  <div className="absolute inset-0 rounded-full blur-xl opacity-40 animate-pulse" style={{
-                    background: 'linear-gradient(to right, #B08B4F, #C99D5F, #B08B4F)'
+                  {/* Multi-layer Glow Aura - Minimal */}
+                  <div className="absolute inset-0 blur-lg opacity-4 animate-pulse" style={{
+                    background: 'radial-gradient(ellipse, rgba(255, 215, 0, 0.15) 0%, rgba(212, 175, 55, 0.08) 30%, rgba(218, 165, 32, 0.04) 60%, transparent 80%)',
+                    width: '280px',
+                    height: '120px',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)'
                   }}></div>
-                  <div className="relative w-24 h-24 mx-auto rounded-full flex items-center justify-center shadow-2xl transform hover:scale-105 transition-transform duration-300" style={{
-                    background: 'linear-gradient(135deg, #B08B4F, #C99D5F, #A07A3F)',
-                    border: '2px solid rgba(176, 139, 79, 0.5)'
+                  <div className="absolute inset-0 blur-sm opacity-2" style={{
+                    background: 'radial-gradient(ellipse, rgba(255, 223, 0, 0.12) 0%, rgba(184, 134, 11, 0.06) 50%, transparent 70%)',
+                    width: '260px',
+                    height: '110px',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)'
+                  }}></div>
+                  
+                  <div className="relative mx-auto transform hover:scale-105 transition-transform duration-500" style={{ 
+                    width: '240px', 
+                    height: '100px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}>
-                    <span className="text-5xl">�</span>
+                    <img 
+                      src="/wings.png" 
+                      alt="Premium Golden Wings" 
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        objectFit: 'contain',
+                        filter: 'drop-shadow(0 4px 20px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.4))',
+                        maxWidth: '240px',
+                        maxHeight: '100px'
+                      }}
+                      onError={(e) => {
+                        // Fallback if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent && !parent.querySelector('.fallback-text')) {
+                          const fallback = document.createElement('div');
+                          fallback.className = 'fallback-text';
+                          fallback.textContent = '👑 PREMIUM AUCTION 👑';
+                          fallback.style.fontSize = '24px';
+                          fallback.style.fontWeight = 'bold';
+                          fallback.style.background = 'linear-gradient(to right, #FFD700, #FFA500, #FFD700)';
+                          fallback.style.webkitBackgroundClip = 'text';
+                          fallback.style.webkitTextFillColor = 'transparent';
+                          parent.appendChild(fallback);
+                        }
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -239,7 +296,7 @@ const AuctionPage: React.FC = () => {
                   letterSpacing: '0.02em',
                   backgroundImage: 'linear-gradient(to right, #F5F5F5, #B08B4F, #F5F5F5)'
                 }}>
-                  {!hasAuctionStarted ? 'Premium Auction Awaits' : 'Ready for Next Bid'}
+                  {!hasAuctionStarted ? 'Auction Awaits' : 'Ready for Next Bid'}
                 </h2>
                 <p className="mb-8 text-sm" style={{
                   fontFamily: "'Montserrat', sans-serif",

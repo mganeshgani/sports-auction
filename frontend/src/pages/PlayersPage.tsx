@@ -94,7 +94,7 @@ const PlayersPage: React.FC = () => {
 
           {/* Stats Card */}
           <div className="backdrop-blur-sm rounded-lg px-4 py-2" style={{
-            background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
             border: '1px solid rgba(212, 175, 55, 0.3)',
             boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
           }}>

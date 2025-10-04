@@ -18,7 +18,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team, onEdit, onDelete }) => {
       exit={{ opacity: 0, scale: 0.9 }}
       className="rounded-lg overflow-hidden shadow-lg"
       style={{
-        background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(26, 31, 46, 0.9) 100%)' as any,
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)' as any,
         border: '2px solid rgba(212, 175, 55, 0.3)' as any,
         boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.1)' as any
       }}

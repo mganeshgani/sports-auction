@@ -141,7 +141,7 @@ const TeamsPage: React.FC = () => {
             {!loading && teams.length > 0 && (
               <div className="flex items-center gap-3 ml-4">
                 <div className="backdrop-blur-sm rounded-lg px-3 py-2" style={{
-                  background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                   border: '1px solid rgba(212, 175, 55, 0.3)',
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
                 }}>
@@ -151,7 +151,7 @@ const TeamsPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="backdrop-blur-sm rounded-lg px-3 py-2" style={{
-                  background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                   border: '1px solid rgba(212, 175, 55, 0.3)',
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
                 }}>
@@ -161,7 +161,7 @@ const TeamsPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="backdrop-blur-sm rounded-lg px-3 py-2" style={{
-                  background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(26, 31, 46, 0.8) 100%)',
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                   border: '1px solid rgba(212, 175, 55, 0.3)',
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
                 }}>
@@ -256,7 +256,7 @@ const TeamsPage: React.FC = () => {
                   key={team._id}
                   className="group relative rounded-2xl p-5 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(26, 31, 46, 0.9) 100%)',
+                    background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                     border: '2px solid rgba(212, 175, 55, 0.3)',
                     boxShadow: '0 8px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.1)'
                   }}

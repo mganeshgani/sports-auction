@@ -201,7 +201,7 @@ const ResultsPage: React.FC = () => {
             {!loading && (
               <div className="flex items-center gap-3 flex-1 justify-center">
                 <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-white/30" style={{
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.6) 100%)',
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
@@ -209,7 +209,7 @@ const ResultsPage: React.FC = () => {
                   <p className="text-lg font-black text-white">{stats.total}</p>
                 </div>
                 <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-emerald-400/50" style={{
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(16, 185, 129, 0.1) 100%)',
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(16, 185, 129, 0.1) 100%)',
                   border: '1px solid rgba(16, 185, 129, 0.4)',
                   boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
@@ -217,7 +217,7 @@ const ResultsPage: React.FC = () => {
                   <p className="text-lg font-black text-emerald-400">{stats.sold}</p>
                 </div>
                 <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-rose-400/50" style={{
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(244, 63, 94, 0.1) 100%)',
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(244, 63, 94, 0.1) 100%)',
                   border: '1px solid rgba(244, 63, 94, 0.4)',
                   boxShadow: '0 4px 15px rgba(244, 63, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
@@ -225,7 +225,7 @@ const ResultsPage: React.FC = () => {
                   <p className="text-lg font-black text-rose-400">{stats.unsold}</p>
                 </div>
                 <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-amber-400/50" style={{
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(212, 175, 55, 0.1) 100%)',
+                  background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(212, 175, 55, 0.1) 100%)',
                   border: '1px solid rgba(212, 175, 55, 0.4)',
                   boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
