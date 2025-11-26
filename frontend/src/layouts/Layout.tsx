@@ -73,7 +73,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     filter: 'drop-shadow(0 2px 10px rgba(212, 175, 55, 0.3))',
                     lineHeight: '1.2'
                   }}>
-                    VOLLEY BALL AUCTION
+                    SPORTS AUCTION
                   </h1>
                   <p style={{
                     fontSize: '0.75rem',
