@@ -9,6 +9,7 @@ const ResultsPage: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
   const [stats, setStats] = useState({
     total: 0,
     sold: 0,
@@ -18,6 +19,18 @@ const ResultsPage: React.FC = () => {
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
   const SOCKET_URL = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5001';
+
+  const handleDeletePlayer = async (player: Player) => {
+    try {
+      await axios.delete(`${API_URL}/players/${player._id}/remove-from-team`);
+      setPlayerToDelete(null);
+      setSelectedTeam(null);
+      fetchData();
+    } catch (error) {
+      console.error('Error removing player from team:', error);
+      alert('Failed to remove player from team');
+    }
+  };
 
   const fetchData = useCallback(async () => {
     try {
@@ -90,6 +103,11 @@ const ResultsPage: React.FC = () => {
 
     socket.on('teamUpdated', () => {
       console.log('Team updated - refreshing results');
+      fetchData();
+    });
+
+    socket.on('playerRemovedFromTeam', () => {
+      console.log('Player removed from team - refreshing results');
       fetchData();
     });
 
@@ -575,7 +593,7 @@ const ResultsPage: React.FC = () => {
                     {teamPlayers.map((player, index) => (
                       <div
                         key={player._id}
-                        className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                        className="group relative rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl flex flex-col"
                         style={{
                           background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                           border: '2px solid rgba(212, 175, 55, 0.3)',
@@ -583,7 +601,7 @@ const ResultsPage: React.FC = () => {
                         }}
                       >
                         {/* Glow Effect on Hover */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-amber-500/5 to-amber-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-amber-500/5 to-amber-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none"></div>
                         
                         {/* Player Number Badge */}
                         <div className="absolute top-3 left-3 z-10">
@@ -610,7 +628,8 @@ const ResultsPage: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="relative p-4">
+                        {/* Player Content */}
+                        <div className="relative p-4 flex-1">
                           {/* Player Icon */}
                           <div className="text-4xl mb-3 text-center">
                             {player.position === 'Spiker' ? '🏐' :
@@ -657,11 +676,110 @@ const ResultsPage: React.FC = () => {
                             </div>
                           </div>
                         </div>
+
+                        {/* Delete Button - Separate Section at Bottom */}
+                        <div className="relative p-3 border-t" style={{
+                          borderColor: 'rgba(239, 68, 68, 0.2)',
+                          background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5))'
+                        }}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPlayerToDelete(player);
+                            }}
+                            className="w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 flex items-center justify-center gap-2"
+                            title="Remove player from team"
+                          >
+                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span className="text-sm font-bold text-white">Remove Player</span>
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
                 );
               })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {playerToDelete && (
+        <div 
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={() => setPlayerToDelete(null)}
+        >
+          <div 
+            className="relative w-full max-w-md overflow-hidden rounded-2xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 10, 10, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+              border: '2px solid rgba(239, 68, 68, 0.4)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 0 100px rgba(239, 68, 68, 0.2)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="px-6 py-4 border-b" style={{
+              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(0, 0, 0, 0.8) 100%)',
+              borderBottom: '1px solid rgba(239, 68, 68, 0.3)'
+            }}>
+              <h2 className="text-2xl font-black tracking-tight flex items-center gap-3" style={{
+                background: 'linear-gradient(135deg, #FFFFFF 0%, #fca5a5 50%, #ef4444 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Remove Player?
+              </h2>
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              <div className="bg-slate-900/50 rounded-xl p-4 border border-red-500/30 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-2xl font-black text-white">
+                    {playerToDelete.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white">{playerToDelete.name}</h3>
+                    <p className="text-xs text-gray-400">{playerToDelete.regNo} • {playerToDelete.class}</p>
+                    <p className="text-xs text-red-400 font-bold">{playerToDelete.position} • ₹{(playerToDelete.soldAmount! / 1000).toFixed(1)}K</p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-gray-300 text-sm mb-2">
+                Are you sure you want to remove <span className="font-bold text-white">{playerToDelete.name}</span> from the team?
+              </p>
+              <p className="text-gray-400 text-xs">
+                • Player will be marked as <span className="text-amber-400">available</span> again<br/>
+                • Amount <span className="text-emerald-400">₹{(playerToDelete.soldAmount! / 1000).toFixed(1)}K</span> will be refunded to team's budget
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-slate-900/50 border-t border-red-500/30 flex gap-3">
+              <button
+                onClick={() => setPlayerToDelete(null)}
+                className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-bold text-white transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeletePlayer(playerToDelete)}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Remove Player
+              </button>
             </div>
           </div>
         </div>

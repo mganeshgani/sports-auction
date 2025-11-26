@@ -24,12 +24,35 @@ exports.uploadPlayers = async (req, res) => {
         console.log('CSV row:', data);
         
         // Map CSV columns to database fields
+        let photoUrl = data['Photo'] || data.photoUrl || '';
+        
+        // Convert Google Drive share link to direct image URL
+        if (photoUrl && photoUrl.includes('drive.google.com')) {
+          // Extract file ID from various Google Drive URL formats:
+          // https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+          // https://drive.google.com/open?id=FILE_ID
+          // https://drive.google.com/uc?id=FILE_ID
+          let fileId = null;
+          
+          if (photoUrl.includes('/file/d/')) {
+            fileId = photoUrl.split('/file/d/')[1].split('/')[0];
+          } else if (photoUrl.includes('id=')) {
+            fileId = photoUrl.split('id=')[1].split('&')[0];
+          }
+          
+          if (fileId) {
+            // Convert to direct download URL
+            photoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+            console.log('Converted Google Drive URL:', photoUrl);
+          }
+        }
+        
         const player = {
           name: data['Player Name'] || data.name || '',
           regNo: data['Registration Number'] || data.regNo || '',
           class: data['Class'] || data.class || '',
           position: data['Position'] || data.position || '',
-          photoUrl: data['Photo'] || data.photoUrl || '',
+          photoUrl: photoUrl,
           status: 'available'
         };
         
@@ -246,6 +269,66 @@ exports.deleteAllPlayers = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Error deleting all players' });
+  }
+};
+
+// Remove player from team
+exports.removePlayerFromTeam = async (req, res) => {
+  try {
+    const { playerId } = req.params;
+    const player = await Player.findById(playerId);
+    
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    if (!player.team || player.status !== 'sold') {
+      return res.status(400).json({ error: 'Player is not assigned to any team' });
+    }
+
+    const teamId = player.team;
+    const soldAmount = player.soldAmount || 0;
+
+    // Find and update the team
+    const team = await Team.findById(teamId);
+    if (team) {
+      // Remove player from team's players array
+      team.players = team.players.filter(p => String(p) !== String(playerId));
+      team.filledSlots = team.players.length;
+      
+      // Refund the sold amount to team's budget
+      team.remainingBudget = (team.remainingBudget || 0) + soldAmount;
+      
+      await team.save();
+      
+      // Emit socket event for team update
+      const io = req.app.get('io');
+      if (io) {
+        io.emit('teamUpdated', team);
+      }
+    }
+
+    // Update player to available status
+    player.status = 'available';
+    player.team = null;
+    player.soldAmount = null;
+    await player.save();
+
+    // Emit socket events for real-time updates
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('playerUpdated', player);
+      io.emit('playerRemovedFromTeam', { player, team });
+    }
+
+    res.json({ 
+      message: 'Player removed from team successfully', 
+      player,
+      team 
+    });
+  } catch (error) {
+    console.error('Error removing player from team:', error);
+    res.status(500).json({ error: 'Error removing player from team' });
   }
 };
 

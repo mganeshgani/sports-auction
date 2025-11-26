@@ -47,6 +47,9 @@ router.post('/:playerId/assign', playerController.assignPlayer);
 // Mark player as unsold
 router.post('/:playerId/unsold', playerController.markUnsold);
 
+// Remove player from team
+router.delete('/:playerId/remove-from-team', playerController.removePlayerFromTeam);
+
 // Update player (PATCH)
 router.patch('/:playerId', playerController.updatePlayer);
 

@@ -294,7 +294,7 @@ const UnsoldPage: React.FC = () => {
                         <div>
                           <p className="font-bold text-sm">{team.name}</p>
                           <p className="text-xs opacity-80">
-                            Budget: ₹{team.budget?.toLocaleString() || 0} • Players: {team.players.length}/{team.players.length + 5}
+                            Budget: ₹{team.remainingBudget?.toLocaleString() || 0} • Players: {team.players.length}/{team.totalSlots || 15}
                           </p>
                         </div>
                         {selectedTeam === team._id && (
