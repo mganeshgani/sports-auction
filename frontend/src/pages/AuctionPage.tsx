@@ -158,10 +158,10 @@ const AuctionPage: React.FC = () => {
       setCelebrationTeamName(acquiredTeam?.name || 'Team');
       setShowCelebration(true);
 
-      // Hide celebration after 6 seconds
+      // Hide celebration after 4 seconds
       setTimeout(() => {
         setShowCelebration(false);
-      }, 6000);
+      }, 4000);
 
       setShowPlayer(false);
       setCurrentPlayer(null);
