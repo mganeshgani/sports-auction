@@ -313,10 +313,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
             {/* Info Cards Stacked */}
             <div className="flex flex-col gap-3 w-full content-fade-1">
               <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-3 border border-amber-500/20">
-                <div className="text-xs text-amber-400/70 font-medium mb-1">Registration No.</div>
-                <div className="text-white font-bold">{player.regNo}</div>
-              </div>
-              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-3 border border-amber-500/20">
                 <div className="text-xs text-amber-400/70 font-medium mb-1">Class</div>
                 <div className="text-white font-bold">{player.class}</div>
               </div>

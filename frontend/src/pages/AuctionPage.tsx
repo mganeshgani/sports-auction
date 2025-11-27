@@ -35,15 +35,25 @@ const AuctionPage: React.FC = () => {
       console.log('✓ Socket.io connected');
     });
 
+    // OPTIMIZED: Debounce socket events to prevent fetch spam
+    let teamFetchTimeout: NodeJS.Timeout | null = null;
+    const debouncedTeamFetch = () => {
+      if (teamFetchTimeout) clearTimeout(teamFetchTimeout);
+      teamFetchTimeout = setTimeout(() => {
+        console.log('🔄 Fetching teams (debounced)');
+        fetchTeams();
+      }, 300);
+    };
+
     socket.on('playerUpdated', (updatedPlayer: Player) => {
       console.log('Player updated:', updatedPlayer);
-      // Refresh teams to show updated budget/slots
-      fetchTeams();
+      // Debounce team fetch
+      debouncedTeamFetch();
     });
 
     socket.on('teamUpdated', (updatedTeam: Team) => {
       console.log('Team updated:', updatedTeam);
-      // Update the specific team in the list
+      // OPTIMIZED: Update specific team instead of refetching all
       setTeams(prevTeams => 
         prevTeams.map(team => 
           team._id === updatedTeam._id ? updatedTeam : team
@@ -56,9 +66,11 @@ const AuctionPage: React.FC = () => {
     });
 
     return () => {
+      if (teamFetchTimeout) clearTimeout(teamFetchTimeout);
       socket.disconnect();
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [SOCKET_URL]);
 
   const playSoldSound = () => {
     const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBjGG0fPTgjMGHm7A7+OZSA0PVarn7KhYFgpIn+DxwG8jBzGF0PLWhzUHImzB7uGWRgsRVKnn7KlZGAhLnuHyv28kBzOE0/LXiTYIJW2+7eCVRwwSU6vo7KpbGQlMneLxv3AlCDSE0/PYijcJJm7A7d+VRwwTVKzp7KpcGgpNnuLyv3ElCDWF0/PYjDgKKG6/7d6URwwUVKzq7KpdGwpNneLyv3ElCDWF0/LYjDgKKW+/7d6VRw0VVK3q7KpeGwtNnePyv3EmCTWF0vLYjDgLKm++7d+URg0WVazq7KpeHA1OoOPywHEmCjaF0fPXizgLK2+/7+CVRg4XVqzr7KpfHA1OoOPywHEmCzeF0fPXjDkLKnC/7+GWRg4YVq3r7KpgHA5PoOPzwHEmCzeF0fPXjTkMK3C/7+GVRw8ZVq3s7KpgHQ5PoOPzwHEnDDiF0PPXjToNLHC+7+GWRxAaV63s7KpgHg5QoOPzwHEnDDiG0PPYjToNLHC/7+GWRxAaV63t7KpgHg9QoOPzwHEnDDiG0fPXjToNLXC/8OGWRxAbV67t7KpgHw9QoOPzwHInDTiG0fPXjTsOLnC/8OGWRxEcV67t7KpgHw9RoOPzwHInDTmG0fPXjTsOLnC/8OGWRxEcWK7t7KtgHw9RoOPzwHInDTmG0fPYjTsOL3C/8OGXRxEdWK7u7KthHxBRn+PzwHIoDTmG0fPXjTsOL3C/8OGXRxEdWK7u7KthHxBRn+PzwHIoDTmG0vPYjTwPMHDA8OGXSBEEWK7u7KthIBBSn+P0wHIoDjmG0vPYjTwPMHDA8OGXSBEEWK7u7KthIBBSn+P0wHIoDjqG0vPYjTwPMHC/8OGXSBEEWK7v7KthIBBSn+P0wHIoDjqG0vPYjTwPMXC/8OGXSBIFWa/v7KxiIBFSn+P0wHIpDjqG0vPYjjwQMXC/8OGYSBIFW6/v7KxiIBFSn+P0wXIpDjuG0vPYjzwQMnC/8OGYSBIFWq/v7KxiIRFSoOT0wXIpDjuG0vPYjzwRM3C/8eGYSRMGWq/w7KxjIRFToOP0wXIqDzuG0/PZjzwRM3C/8eGYSRMGWq/w7KxjIRJToOP0wXIqDzuG0/PZjzwRNHC/8eGYSRMHWq/w7K1jIRJToOP0wnIqDzuH0/PZjzwRNHC/8eKYSRMHWq/w7K1jIRJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqDzuH0/PZkD0RNHDAseKYShMHWrDw7K1jIhJToOP0wnIqA==');

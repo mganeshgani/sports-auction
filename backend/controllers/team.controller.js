@@ -118,7 +118,10 @@ exports.deleteTeam = async (req, res) => {
 // Get all teams
 exports.getAllTeams = async (req, res) => {
   try {
-    const teams = await Team.find().populate('players');
+    // OPTIMIZED: Only populate necessary fields, not full player objects
+    const teams = await Team.find()
+      .populate('players', 'name regNo class position soldAmount') // Only specific fields
+      .lean(); // Return plain objects (faster)
     res.json(teams);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching teams' });
@@ -129,7 +132,9 @@ exports.getAllTeams = async (req, res) => {
 exports.getTeamById = async (req, res) => {
   try {
     const { teamId } = req.params;
-    const team = await Team.findById(teamId).populate('players');
+    const team = await Team.findById(teamId)
+      .populate('players', 'name regNo class position soldAmount')
+      .lean();
     
     if (!team) {
       return res.status(404).json({ error: 'Team not found' });
@@ -145,8 +150,9 @@ exports.getTeamById = async (req, res) => {
 exports.getFinalResults = async (req, res) => {
   try {
     const teams = await Team.find()
-      .populate('players')
-      .sort('name');
+      .populate('players', 'name regNo class position soldAmount')
+      .sort('name')
+      .lean();
 
     const results = teams.map(team => ({
       teamName: team.name,

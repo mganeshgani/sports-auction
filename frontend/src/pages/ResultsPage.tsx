@@ -10,6 +10,8 @@ const ResultsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
+  const [playerToChangeTeam, setPlayerToChangeTeam] = useState<Player | null>(null);
+  const [newTeamId, setNewTeamId] = useState<string>('');
   const [stats, setStats] = useState({
     total: 0,
     sold: 0,
@@ -29,6 +31,31 @@ const ResultsPage: React.FC = () => {
     } catch (error) {
       console.error('Error removing player from team:', error);
       alert('Failed to remove player from team');
+    }
+  };
+
+  const handleChangeTeam = async () => {
+    if (!playerToChangeTeam || !newTeamId) {
+      alert('Please select a team');
+      return;
+    }
+
+    try {
+      // Update player with new team
+      await axios.put(`${API_URL}/players/${playerToChangeTeam._id}`, {
+        team: newTeamId,
+        status: 'sold',
+        soldAmount: playerToChangeTeam.soldAmount
+      });
+      
+      setPlayerToChangeTeam(null);
+      setNewTeamId('');
+      setSelectedTeam(null);
+      fetchData();
+    } catch (error: any) {
+      console.error('Error changing player team:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to change player team';
+      alert(errorMessage);
     }
   };
 
@@ -65,11 +92,9 @@ const ResultsPage: React.FC = () => {
     } catch (error) {
       console.error('❌ Error fetching data:', error);
     } finally {
-      if (loading) {
-        setLoading(false);
-      }
+      setLoading(false);
     }
-  }, [API_URL, loading]);
+  }, [API_URL]);
 
   useEffect(() => {
     fetchData();
@@ -81,48 +106,38 @@ const ResultsPage: React.FC = () => {
       console.log('✓ Results page connected to Socket.io');
     });
 
-    socket.on('playerSold', () => {
-      console.log('Player sold - refreshing results');
-      fetchData();
-    });
+    // OPTIMIZED: Debounce rapid socket events to prevent fetch spam
+    let fetchTimeout: NodeJS.Timeout | null = null;
+    const debouncedFetch = () => {
+      if (fetchTimeout) clearTimeout(fetchTimeout);
+      fetchTimeout = setTimeout(() => {
+        console.log('🔄 Debounced fetch triggered');
+        fetchData();
+      }, 300); // Wait 300ms before fetching
+    };
 
-    socket.on('playerMarkedUnsold', () => {
-      console.log('Player marked unsold - refreshing results');
-      fetchData();
-    });
-
+    socket.on('playerSold', debouncedFetch);
+    socket.on('playerMarkedUnsold', debouncedFetch);
     socket.on('dataReset', () => {
-      console.log('Data reset - refreshing results');
+      console.log('Data reset - immediate refresh');
       fetchData();
     });
-
-    socket.on('playerUpdated', () => {
-      console.log('Player updated - refreshing results');
-      fetchData();
-    });
-
-    socket.on('teamUpdated', () => {
-      console.log('Team updated - refreshing results');
-      fetchData();
-    });
-
-    socket.on('playerRemovedFromTeam', () => {
-      console.log('Player removed from team - refreshing results');
-      fetchData();
-    });
+    socket.on('playerUpdated', debouncedFetch);
+    socket.on('teamUpdated', debouncedFetch);
+    socket.on('playerRemovedFromTeam', debouncedFetch);
 
     socket.on('disconnect', () => {
       console.log('✗ Results page disconnected from Socket.io');
     });
     
     return () => {
+      if (fetchTimeout) clearTimeout(fetchTimeout);
       socket.disconnect();
     };
   }, [fetchData, SOCKET_URL]);
 
   const csvHeaders = [
     { label: 'Player Name', key: 'name' },
-    { label: 'Reg No', key: 'regNo' },
     { label: 'Class', key: 'class' },
     { label: 'Position', key: 'position' },
     { label: 'Status', key: 'status' },
@@ -188,18 +203,18 @@ const ResultsPage: React.FC = () => {
     <div className="h-full flex flex-col overflow-hidden" style={{
       background: 'linear-gradient(160deg, #000000 0%, #0a0a0a 25%, #1a1a1a 50%, #0f172a 75%, #1a1a1a 100%)'
     }}>
-      {/* Elegant Premium Horizontal Header */}
+      {/* Elegant Premium Horizontal Header - Responsive */}
       <div className="flex-shrink-0 backdrop-blur-xl border-b shadow-xl" style={{
         background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 17, 23, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
         borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
         boxShadow: '0 4px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.1)'
       }}>
-        <div className="px-4 sm:px-6 py-3">
-          {/* Single Horizontal Row - Premium Layout */}
-          <div className="flex items-center gap-6">
+        <div className="px-3 sm:px-4 md:px-6 py-3">
+          {/* Responsive Layout: Stacked on Mobile, Horizontal on Desktop */}
+          <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6">
             {/* Left: Title with LIVE badge */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight whitespace-nowrap" style={{
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight whitespace-nowrap" style={{
                 background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -208,50 +223,50 @@ const ResultsPage: React.FC = () => {
               }}>
                 Auction Results
               </h1>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{
+              <div className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-full" style={{
                 background: 'rgba(16, 185, 129, 0.15)',
                 border: '1px solid rgba(16, 185, 129, 0.4)',
                 boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)'
               }}>
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#10b981' }}></div>
-                <span className="text-xs font-bold text-emerald-400">LIVE</span>
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full animate-pulse" style={{ background: '#10b981' }}></div>
+                <span className="text-[10px] sm:text-xs font-bold text-emerald-400">LIVE</span>
               </div>
             </div>
 
-            {/* Center: Ultra-Premium Stats - Glass Morphism */}
+            {/* Center: Ultra-Premium Stats - Responsive Grid */}
             {!loading && (
-              <div className="flex items-center gap-3 flex-1 justify-center">
-                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-white/30" style={{
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 overflow-x-auto pb-1 lg:pb-0 lg:justify-center">
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-white/30 flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
-                  <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Total</p>
-                  <p className="text-lg font-black text-white">{stats.total}</p>
+                  <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Total</p>
+                  <p className="text-base sm:text-lg font-black text-white">{stats.total}</p>
                 </div>
-                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-emerald-400/50" style={{
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-emerald-400/50 flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(16, 185, 129, 0.1) 100%)',
                   border: '1px solid rgba(16, 185, 129, 0.4)',
                   boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
-                  <p className="text-[10px] text-emerald-400/80 uppercase tracking-widest font-bold mb-0.5">Sold</p>
-                  <p className="text-lg font-black text-emerald-400">{stats.sold}</p>
+                  <p className="text-[9px] sm:text-[10px] text-emerald-400/80 uppercase tracking-widest font-bold mb-0.5">Sold</p>
+                  <p className="text-base sm:text-lg font-black text-emerald-400">{stats.sold}</p>
                 </div>
-                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-rose-400/50" style={{
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-rose-400/50 flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(244, 63, 94, 0.1) 100%)',
                   border: '1px solid rgba(244, 63, 94, 0.4)',
                   boxShadow: '0 4px 15px rgba(244, 63, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
-                  <p className="text-[10px] text-rose-400/80 uppercase tracking-widest font-bold mb-0.5">Unsold</p>
-                  <p className="text-lg font-black text-rose-400">{stats.unsold}</p>
+                  <p className="text-[9px] sm:text-[10px] text-rose-400/80 uppercase tracking-widest font-bold mb-0.5">Unsold</p>
+                  <p className="text-base sm:text-lg font-black text-rose-400">{stats.unsold}</p>
                 </div>
-                <div className="backdrop-blur-md rounded-xl px-4 py-2 border transition-all hover:scale-105 hover:border-amber-400/50" style={{
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-amber-400/50 flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(212, 175, 55, 0.1) 100%)',
                   border: '1px solid rgba(212, 175, 55, 0.4)',
                   boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
-                  <p className="text-[10px] text-amber-400/80 uppercase tracking-widest font-bold mb-0.5">Spent</p>
-                  <p className="text-lg font-black" style={{
+                  <p className="text-[9px] sm:text-[10px] text-amber-400/80 uppercase tracking-widest font-bold mb-0.5">Spent</p>
+                  <p className="text-base sm:text-lg font-black" style={{
                     background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
@@ -263,25 +278,27 @@ const ResultsPage: React.FC = () => {
               </div>
             )}
 
-            {/* Right: Export Button */}
-            <CSVLink
-              data={csvData}
-              headers={csvHeaders}
-              filename={`auction_results_${new Date().toISOString().split('T')[0]}.csv`}
-              className="group relative overflow-hidden px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center gap-2 flex-shrink-0"
-              style={{
-                background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
-                border: '2px solid rgba(212, 175, 55, 0.6)',
-                boxShadow: '0 4px 25px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-                color: '#000000'
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform -skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
-              <svg className="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span className="relative z-10 hidden sm:inline">Export</span>
-            </CSVLink>
+            {/* Right: Export Button - Responsive */}
+            <div className="flex items-center gap-2 flex-shrink-0 self-start lg:self-auto">
+              <CSVLink
+                data={csvData}
+                headers={csvHeaders}
+                filename={`auction_results_${new Date().toISOString().split('T')[0]}.csv`}
+                className="group relative overflow-hidden px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center justify-center gap-2"
+                style={{
+                  background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 50%, #D4AF37 100%)',
+                  border: '2px solid rgba(212, 175, 55, 0.6)',
+                  boxShadow: '0 4px 25px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+                  color: '#000000'
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 transform -skew-x-12 group-hover:translate-x-full transition-transform duration-700"></div>
+                <svg className="w-3 h-3 sm:w-4 sm:h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span className="relative z-10 hidden sm:inline">Export</span>
+              </CSVLink>
+            </div>
           </div>
         </div>
       </div>
@@ -298,7 +315,7 @@ const ResultsPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-x-auto overflow-y-hidden px-4 sm:px-6 py-4">
+        <div className="flex-1 overflow-x-auto overflow-y-hidden px-2 sm:px-4 md:px-6 py-4">
           {/* Horizontal Teams Container */}
           <div className="flex gap-4 pb-4 min-h-0" style={{ minWidth: 'max-content' }}>
             {teams.map((team, index) => {
@@ -347,7 +364,7 @@ const ResultsPage: React.FC = () => {
                 <div
                   key={`${team._id}-${actualFilledSlots}-${actualSpent}-${actualRemaining}`}
                   onClick={() => setSelectedTeam(team)}
-                  className={`group flex-shrink-0 w-72 sm:w-80 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10 cursor-pointer`}
+                  className={`group flex-shrink-0 w-64 sm:w-72 md:w-80 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10 cursor-pointer`}
                   style={{ maxHeight: 'calc(100vh - 180px)' }}
                 >
                   {/* Animated Background */}
@@ -589,7 +606,7 @@ const ResultsPage: React.FC = () => {
                 }
 
                 return (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {teamPlayers.map((player, index) => (
                       <div
                         key={player._id}
@@ -650,57 +667,248 @@ const ResultsPage: React.FC = () => {
 
                           {/* Player Details */}
                           <div className="space-y-2">
-                            <div className="flex justify-between items-center text-sm">
-                              <span className="text-gray-400">Class:</span>
-                              <span className="font-bold text-white">{player.class}</span>
-                            </div>
-                            
-                            <div className="flex justify-between items-center text-sm">
-                              <span className="text-gray-400">Reg No:</span>
-                              <span className="font-bold text-gray-300">{player.regNo}</span>
-                            </div>
-
-                            {/* Sold Amount - Highlighted */}
-                            <div className="mt-3 pt-3 border-t border-amber-500/30">
-                              <div className="flex justify-between items-center">
-                                <span className="text-xs text-gray-400 uppercase tracking-wider">Sold For</span>
-                                <span className="text-xl font-black" style={{
-                                  background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent',
-                                  backgroundClip: 'text'
-                                }}>
-                                  ₹{(player.soldAmount! / 1000).toFixed(1)}K
-                                </span>
+                            {player.class && (
+                              <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-400">Class:</span>
+                                <span className="font-bold text-white">{player.class}</span>
                               </div>
+                            )}
+                          </div>
+
+                          {/* Sold Amount */}
+                          <div className="mt-3 pt-3 border-t border-amber-500/30">
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-400 uppercase tracking-wider">Sold For</span>
+                              <span className="text-xl font-black" style={{
+                                background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text'
+                              }}>
+                                ₹{(player.soldAmount! / 1000).toFixed(1)}K
+                              </span>
                             </div>
                           </div>
                         </div>
 
-                        {/* Delete Button - Separate Section at Bottom */}
+                        {/* Action Buttons - Separate Section at Bottom */}
                         <div className="relative p-3 border-t" style={{
-                          borderColor: 'rgba(239, 68, 68, 0.2)',
+                          borderColor: 'rgba(212, 175, 55, 0.2)',
                           background: 'linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5))'
                         }}>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setPlayerToDelete(player);
-                            }}
-                            className="w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 flex items-center justify-center gap-2"
-                            title="Remove player from team"
-                          >
-                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                            <span className="text-sm font-bold text-white">Remove Player</span>
-                          </button>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPlayerToChangeTeam(player);
+                              }}
+                              className="flex-1 py-2.5 px-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 flex items-center justify-center gap-2"
+                              title="Change player team"
+                            >
+                              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                              </svg>
+                              <span className="text-sm font-bold text-white">Change</span>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPlayerToDelete(player);
+                              }}
+                              className="flex-1 py-2.5 px-3 rounded-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/30 flex items-center justify-center gap-2"
+                              title="Remove player from team"
+                            >
+                              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                              <span className="text-sm font-bold text-white">Remove</span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 );
               })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change Team Modal */}
+      {playerToChangeTeam && (
+        <div 
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={() => {
+            setPlayerToChangeTeam(null);
+            setNewTeamId('');
+          }}
+        >
+          <div 
+            className="relative w-full max-w-2xl overflow-hidden rounded-2xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 20, 30, 0.9) 50%, rgba(0, 0, 0, 0.95) 100%)',
+              border: '2px solid rgba(59, 130, 246, 0.4)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 0 100px rgba(59, 130, 246, 0.2)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="px-6 py-4 border-b" style={{
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0.8) 100%)',
+              borderBottom: '1px solid rgba(59, 130, 246, 0.3)'
+            }}>
+              <h2 className="text-2xl font-black tracking-tight flex items-center gap-3" style={{
+                background: 'linear-gradient(135deg, #FFFFFF 0%, #93c5fd 50%, #3b82f6 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                <svg className="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Change Player Team
+              </h2>
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              <div className="bg-slate-900/50 rounded-xl p-4 border border-blue-500/30 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-2xl font-black text-white">
+                    {playerToChangeTeam.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white">{playerToChangeTeam.name}</h3>
+                    {playerToChangeTeam.class && (
+                      <p className="text-xs text-gray-400">
+                        {playerToChangeTeam.class}
+                      </p>
+                    )}
+                    <p className="text-xs text-blue-400 font-bold">{playerToChangeTeam.position} • ₹{(playerToChangeTeam.soldAmount! / 1000).toFixed(1)}K</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-bold text-gray-300 mb-3">
+                  Select New Team
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scrollbar">
+                  {teams
+                    .filter(team => {
+                      // Filter out current team
+                      const currentTeamId = typeof playerToChangeTeam.team === 'object' 
+                        ? (playerToChangeTeam.team as any)._id 
+                        : playerToChangeTeam.team;
+                      return team._id !== currentTeamId;
+                    })
+                    .map((team) => {
+                      const isSelected = newTeamId === team._id;
+                      const canAfford = (team.remainingBudget || 0) >= (playerToChangeTeam.soldAmount || 0);
+                      const hasSlots = (team.filledSlots || 0) < (team.totalSlots || 0);
+                      const isAvailable = canAfford && hasSlots;
+                      
+                      return (
+                        <button
+                          key={team._id}
+                          onClick={() => isAvailable && setNewTeamId(team._id)}
+                          disabled={!isAvailable}
+                          className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+                            isSelected 
+                              ? 'border-blue-500 bg-blue-500/20 scale-105' 
+                              : isAvailable
+                                ? 'border-gray-600 hover:border-blue-400 hover:bg-blue-500/10'
+                                : 'border-gray-800 bg-gray-900/30 opacity-50 cursor-not-allowed'
+                          }`}
+                          style={{
+                            background: isSelected 
+                              ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(30, 64, 175, 0.1) 100%)'
+                              : isAvailable
+                                ? 'linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(10, 10, 10, 0.4) 100%)'
+                                : 'rgba(0, 0, 0, 0.3)'
+                          }}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className={`font-black text-lg ${
+                              isSelected ? 'text-blue-400' : isAvailable ? 'text-white' : 'text-gray-600'
+                            }`}>
+                              {team.name}
+                            </h3>
+                            {isSelected && (
+                              <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                              <span className="text-gray-400">Budget Left:</span>
+                              <span className={`font-bold ${
+                                canAfford ? 'text-emerald-400' : 'text-red-400'
+                              }`}>
+                                ₹{((team.remainingBudget || 0) / 1000).toFixed(1)}K
+                              </span>
+                            </div>
+                            <div className="flex justify-between text-xs">
+                              <span className="text-gray-400">Slots:</span>
+                              <span className={`font-bold ${
+                                hasSlots ? 'text-blue-400' : 'text-red-400'
+                              }`}>
+                                {team.filledSlots || 0}/{team.totalSlots}
+                              </span>
+                            </div>
+                            {!isAvailable && (
+                              <p className="text-xs text-red-400 mt-2 font-semibold">
+                                {!canAfford && 'Insufficient budget'}
+                                {!canAfford && !hasSlots && ' • '}
+                                {!hasSlots && 'No slots available'}
+                              </p>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-xs text-gray-300">
+                <p className="flex items-start gap-2">
+                  <svg className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>
+                    Player will be moved to the selected team. The sold amount (₹{(playerToChangeTeam.soldAmount! / 1000).toFixed(1)}K) will be deducted from new team's budget and refunded to current team.
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-slate-900/50 border-t border-blue-500/30 flex gap-3">
+              <button
+                onClick={() => {
+                  setPlayerToChangeTeam(null);
+                  setNewTeamId('');
+                }}
+                className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-bold text-white transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleChangeTeam}
+                disabled={!newTeamId}
+                className={`flex-1 px-4 py-3 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 ${
+                  newTeamId
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600'
+                    : 'bg-gray-700 opacity-50 cursor-not-allowed'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Change Team
+              </button>
             </div>
           </div>
         </div>
@@ -748,7 +956,11 @@ const ResultsPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-black text-white">{playerToDelete.name}</h3>
-                    <p className="text-xs text-gray-400">{playerToDelete.regNo} • {playerToDelete.class}</p>
+                    {playerToDelete.class && (
+                      <p className="text-xs text-gray-400">
+                        {playerToDelete.class}
+                      </p>
+                    )}
                     <p className="text-xs text-red-400 font-bold">{playerToDelete.position} • ₹{(playerToDelete.soldAmount! / 1000).toFixed(1)}K</p>
                   </div>
                 </div>

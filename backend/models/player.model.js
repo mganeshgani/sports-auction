@@ -46,8 +46,10 @@ const playerSchema = new mongoose.Schema({
   }
 });
 
-// Index for faster queries
+// Indexes for faster queries
 playerSchema.index({ status: 1 });
 playerSchema.index({ team: 1 });
+playerSchema.index({ regNo: 1 }); // Unique index for duplicate checks
+playerSchema.index({ status: 1, team: 1 }); // Compound index for filtered queries
 
 module.exports = mongoose.model('Player', playerSchema);
