@@ -315,9 +315,9 @@ const ResultsPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-x-auto overflow-y-hidden px-2 sm:px-4 md:px-6 py-4">
-          {/* Horizontal Teams Container */}
-          <div className="flex gap-4 pb-4 min-h-0" style={{ minWidth: 'max-content' }}>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-2 sm:px-4 md:px-6 py-4">
+          {/* Vertical Teams Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-4">
             {teams.map((team, index) => {
               const teamPlayers = players.filter(p => (p.team === team._id || p.team === team.name) && p.status === 'sold');
               const spent = teamPlayers.reduce((sum, p) => sum + (p.soldAmount || 0), 0);
@@ -364,7 +364,7 @@ const ResultsPage: React.FC = () => {
                 <div
                   key={`${team._id}-${actualFilledSlots}-${actualSpent}-${actualRemaining}`}
                   onClick={() => setSelectedTeam(team)}
-                  className={`group flex-shrink-0 w-64 sm:w-72 md:w-80 relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10 cursor-pointer`}
+                  className={`group w-full relative overflow-hidden bg-gradient-to-br ${gradientClass} backdrop-blur-sm rounded-xl border ${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/10 cursor-pointer`}
                   style={{ maxHeight: 'calc(100vh - 180px)' }}
                 >
                   {/* Animated Background */}
