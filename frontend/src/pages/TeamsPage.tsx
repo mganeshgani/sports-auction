@@ -246,7 +246,7 @@ const TeamsPage: React.FC = () => {
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {teams.map((team) => {
               const budgetPercentage = getBudgetPercentage(team);
               const slotsPercentage = getSlotsPercentage(team);
@@ -254,7 +254,7 @@ const TeamsPage: React.FC = () => {
               return (
                 <div
                   key={team._id}
-                  className="group relative rounded-2xl p-5 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+                  className="group relative rounded-xl p-4 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                     border: '2px solid rgba(212, 175, 55, 0.3)',
@@ -262,9 +262,9 @@ const TeamsPage: React.FC = () => {
                   }}
                 >
                   {/* Team Header */}
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="text-2xl font-black tracking-tight" style={{
+                      <h3 className="text-xl font-black tracking-tight" style={{
                         background: 'linear-gradient(135deg, #FFFFFF 0%, #F0D770 50%, #D4AF37 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
@@ -276,19 +276,19 @@ const TeamsPage: React.FC = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => openEditModal(team)}
-                        className="w-9 h-9 rounded-lg bg-blue-600/20 hover:bg-blue-600 border border-blue-600/30 hover:border-blue-500 flex items-center justify-center transition-all duration-300 hover:scale-110 group/edit"
+                        className="w-8 h-8 rounded-lg bg-blue-600/20 hover:bg-blue-600 border border-blue-600/30 hover:border-blue-500 flex items-center justify-center transition-all duration-300 hover:scale-110 group/edit"
                         title="Edit Team"
                       >
-                        <svg className="w-4 h-4 text-blue-400 group-hover/edit:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-3.5 h-3.5 text-blue-400 group-hover/edit:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                       </button>
                       <button
                         onClick={() => handleDelete(team._id)}
-                        className="w-9 h-9 rounded-lg bg-red-600/20 hover:bg-red-600 border border-red-600/30 hover:border-red-500 flex items-center justify-center transition-all duration-300 hover:scale-110 group/delete"
+                        className="w-8 h-8 rounded-lg bg-red-600/20 hover:bg-red-600 border border-red-600/30 hover:border-red-500 flex items-center justify-center transition-all duration-300 hover:scale-110 group/delete"
                         title="Delete Team"
                       >
-                        <svg className="w-4 h-4 text-red-400 group-hover/delete:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-3.5 h-3.5 text-red-400 group-hover/delete:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                       </button>
@@ -296,19 +296,19 @@ const TeamsPage: React.FC = () => {
                   </div>
 
                   {/* Stats Grid */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Budget Section */}
-                    <div className="rounded-xl p-4" style={{
+                    <div className="rounded-lg p-3" style={{
                       background: 'rgba(0, 0, 0, 0.5)',
                       border: '1px solid rgba(212, 175, 55, 0.2)'
                     }}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
                           Budget
                         </span>
-                        <span className="text-sm font-black" style={{ color: '#D4AF37' }}>₹{(team.budget || 0).toLocaleString()}</span>
+                        <span className="text-xs font-black" style={{ color: '#D4AF37' }}>₹{(team.budget || 0).toLocaleString()}</span>
                       </div>
-                      <div className="h-2 rounded-full overflow-hidden mb-2" style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
+                      <div className="h-1.5 rounded-full overflow-hidden mb-1.5" style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
@@ -322,23 +322,23 @@ const TeamsPage: React.FC = () => {
                         ></div>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-500">Remaining</span>
-                        <span className="text-sm font-bold" style={{ color: '#F0D770' }}>₹{(team.remainingBudget || 0).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">Remaining</span>
+                        <span className="text-xs font-bold" style={{ color: '#F0D770' }}>₹{(team.remainingBudget || 0).toLocaleString()}</span>
                       </div>
                     </div>
 
                     {/* Players/Slots Section */}
-                    <div className="rounded-xl p-4" style={{
+                    <div className="rounded-lg p-3" style={{
                       background: 'rgba(0, 0, 0, 0.5)',
                       border: '1px solid rgba(212, 175, 55, 0.2)'
                     }}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
                           Players
                         </span>
-                        <span className="text-sm font-black" style={{ color: '#D4AF37' }}>{team.filledSlots || 0} / {team.totalSlots}</span>
+                        <span className="text-xs font-black" style={{ color: '#D4AF37' }}>{team.filledSlots || 0} / {team.totalSlots}</span>
                       </div>
-                      <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
+                      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
@@ -355,19 +355,19 @@ const TeamsPage: React.FC = () => {
 
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="rounded-lg p-3" style={{
+                      <div className="rounded-lg p-2" style={{
                         background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(240, 215, 112, 0.1) 100%)',
                         border: '1px solid rgba(212, 175, 55, 0.3)'
                       }}>
-                        <p className="text-xs text-gray-400 mb-1">Spent</p>
-                        <p className="text-lg font-black text-white">₹{((team.budget || 0) - (team.remainingBudget || 0)).toLocaleString()}</p>
+                        <p className="text-[10px] text-gray-400 mb-0.5">Spent</p>
+                        <p className="text-sm font-black text-white">₹{((team.budget || 0) - (team.remainingBudget || 0)).toLocaleString()}</p>
                       </div>
-                      <div className="rounded-lg p-3" style={{
+                      <div className="rounded-lg p-2" style={{
                         background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(240, 215, 112, 0.1) 100%)',
                         border: '1px solid rgba(212, 175, 55, 0.3)'
                       }}>
-                        <p className="text-xs text-gray-400 mb-1">Slots Left</p>
-                        <p className="text-lg font-black text-white">{team.totalSlots - (team.filledSlots || 0)}</p>
+                        <p className="text-[10px] text-gray-400 mb-0.5">Slots Left</p>
+                        <p className="text-sm font-black text-white">{team.totalSlots - (team.filledSlots || 0)}</p>
                       </div>
                     </div>
                   </div>

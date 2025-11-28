@@ -236,37 +236,37 @@ const ResultsPage: React.FC = () => {
             {/* Center: Ultra-Premium Stats - Responsive Grid */}
             {!loading && (
               <div className="flex items-center gap-2 sm:gap-3 flex-1 overflow-x-auto pb-1 lg:pb-0 lg:justify-center">
-                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-white/30 flex-shrink-0" style={{
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 border flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(10, 10, 10, 0.6) 50%, rgba(0, 0, 0, 0.7) 100%)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
                   <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Total</p>
-                  <p className="text-base sm:text-lg font-black text-white">{stats.total}</p>
+                  <p className="text-lg sm:text-xl font-black text-white">{stats.total}</p>
                 </div>
-                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-emerald-400/50 flex-shrink-0" style={{
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 border flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(16, 185, 129, 0.1) 100%)',
                   border: '1px solid rgba(16, 185, 129, 0.4)',
                   boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
                   <p className="text-[9px] sm:text-[10px] text-emerald-400/80 uppercase tracking-widest font-bold mb-0.5">Sold</p>
-                  <p className="text-base sm:text-lg font-black text-emerald-400">{stats.sold}</p>
+                  <p className="text-lg sm:text-xl font-black text-emerald-400">{stats.sold}</p>
                 </div>
-                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-rose-400/50 flex-shrink-0" style={{
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 border flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(244, 63, 94, 0.1) 100%)',
                   border: '1px solid rgba(244, 63, 94, 0.4)',
                   boxShadow: '0 4px 15px rgba(244, 63, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
                   <p className="text-[9px] sm:text-[10px] text-rose-400/80 uppercase tracking-widest font-bold mb-0.5">Unsold</p>
-                  <p className="text-base sm:text-lg font-black text-rose-400">{stats.unsold}</p>
+                  <p className="text-lg sm:text-xl font-black text-rose-400">{stats.unsold}</p>
                 </div>
-                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-2 border transition-all hover:scale-105 hover:border-amber-400/50 flex-shrink-0" style={{
+                <div className="backdrop-blur-md rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 border flex-shrink-0" style={{
                   background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(212, 175, 55, 0.1) 100%)',
                   border: '1px solid rgba(212, 175, 55, 0.4)',
                   boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}>
                   <p className="text-[9px] sm:text-[10px] text-amber-400/80 uppercase tracking-widest font-bold mb-0.5">Spent</p>
-                  <p className="text-base sm:text-lg font-black" style={{
+                  <p className="text-lg sm:text-xl font-black" style={{
                     background: 'linear-gradient(135deg, #D4AF37 0%, #F0D770 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
